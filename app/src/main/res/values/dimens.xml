@@ -11,4 +11,7 @@
     <dimen name="login_button_margin_top">15dp</dimen>
     <dimen name="login_forgot_password_top">10dp</dimen>
     <dimen name="login_register_button">40dp</dimen>
+
+    <!--register-->
+    <dimen name="register_horizontal_margin">15dp</dimen>
 </resources>
