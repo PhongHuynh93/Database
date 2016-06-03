@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Database2</string>
+
+    <!--Login screen-->
+    <string name="bgContentDescription">Taylor Swift</string>
+    <string name="login_email_hint">E-mail address</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_title">Database</string>
+    <string name="login_signup_button">Sign up</string>
+    <string name="login_forgot_password_tv">Forgot password?</string>
+    <string name="login_register_button">REGISTER</string>
+</resources>
