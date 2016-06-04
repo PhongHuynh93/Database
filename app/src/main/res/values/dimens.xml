@@ -11,4 +11,12 @@
     <dimen name="login_button_margin_top">15dp</dimen>
     <dimen name="login_forgot_password_top">10dp</dimen>
     <dimen name="login_register_button">40dp</dimen>
+
+    <!--register-->
+    <dimen name="register_title_margin_top">40dp</dimen>
+    <dimen name="register_horizontal_margin">35dp</dimen>
+    <dimen name="register_vertical_margin">7dp</dimen>
+    <dimen name="edittext_height">50dp</dimen>
+    <dimen name="edittext_padding">15dp</dimen>
+    <dimen name="register_vertical_margin_title">30dp</dimen>
 </resources>

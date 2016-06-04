@@ -5,8 +5,20 @@
     <string name="bgContentDescription">Taylor Swift</string>
     <string name="login_email_hint">E-mail address</string>
     <string name="login_password_hint">Password</string>
-    <string name="login_title">Database</string>
-    <string name="login_signup_button">Sign up</string>
+    <string name="login_title">Yaho</string>
+    <string name="login_signup_button">Login</string>
     <string name="login_forgot_password_tv">Forgot password?</string>
-    <string name="login_register_button">REGISTER</string>
+    <string name="login_register_button">Register</string>
+
+    <!--register screen-->
+    <string name="icon_beach">Icon Beach</string>
+    <string name="register_title">This\'ll be quick.</string>
+    <string name="register_name">Your name</string>
+    <string name="register_email">Email</string>
+    <string name="register_pass">Password</string>
+    <string name="register_pass_again">Password (again)</string>
+    <string name="register_button">Join with us!</string>
+    <string name="register_msg_agree">By using Yaho, you agree to our</string>
+    <string name="register_msg_agree_2">Terms of Service and Privacy Policy</string>
+    <string name="register_title_big">Register</string>
 </resources>
