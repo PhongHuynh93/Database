@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--TODO 5 theo https://guides.codepath.com/android/Mobile-Screen-Archetypes#1-login-->
+<!-- 5 theo https://guides.codepath.com/android/Mobile-Screen-Archetypes#1-login-->
 <!--make custome edittext + remove line under edittext + when fucus, draw blue border-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"

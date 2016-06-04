@@ -14,14 +14,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: 6/3/2016 2 scale background image
+        // : 6/3/2016 2 scale background image
         scaleBackgroundImage();
 
         setUpView();
     }
 
     private void scaleBackgroundImage() {
-        // TODO 3 code lấy kích thước màn hình - nhưng ko dùng nữa
+        //  3 code lấy kích thước màn hình - nhưng ko dùng nữa
 //        DisplayMetrics metrics = new DisplayMetrics();
 //        getWindowManager().getDefaultDisplay().getMetrics(metrics); // metrics.widthPixels
         ImageView backgroundImageView = (ImageView) findViewById(R.id.image_login_bg);
