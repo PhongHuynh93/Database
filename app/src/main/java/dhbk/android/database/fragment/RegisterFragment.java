@@ -53,7 +53,7 @@ public class RegisterFragment extends Fragment {
         mListener = null;
     }
 
-    // TODO: 6/4/16 check error when register
+    // TODO: 6/4/16 check error when register etc empty field
     // giả sử đã điền đầy đủ 4 thông tin, cất name, email, pass word vào database
     private void setUpView() {
         Button registerButton = (Button) getActivity().findViewById(R.id.btn_register);
@@ -67,6 +67,7 @@ public class RegisterFragment extends Fragment {
                 EditText passEdt = (EditText) getActivity().findViewById(R.id.edt_password);
                 String passText = passEdt.getText().toString();
 
+                // TODO: 6/4/16 check duplicate email by entering database and compare
                 mListener.onRegisterFragmentInteractionAddDatabase(nameText, emailText, passText);
                 mListener.onRegisterFragmentInteractionAutoComplete(nameText, emailText, passText);
             }

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import dhbk.android.database.R;
 import dhbk.android.database.models.User;
 
 /**
@@ -17,7 +18,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     // database
     private static final String DATABASE_NAME = "yaho";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // table
     private static final String TABLE_USERS = "user_accounts";
@@ -39,10 +40,10 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     private static final String KEY_CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USERS +
             "(" +
             KEY_USER_ID + " INTEGER PRIMARY KEY," +
-            KEY_USER_NAME + " TEXT," +
-            KEY_USER_EMAIL + " TEXT," +
-            KEY_USER_PASS + " TEXT," +
-            KEY_USER_PROFILE_PICTURE_URL + " TEXT" +
+            KEY_USER_NAME + " TEXT NOT NULL," +
+            KEY_USER_EMAIL + " TEXT NOT NULL UNIQUE," +
+            KEY_USER_PASS + " TEXT NOT NULL," +
+            KEY_USER_PROFILE_PICTURE_URL + " INT DEFAULT " + R.mipmap.ic_launcher +
             ")";
 
     // create table user posts

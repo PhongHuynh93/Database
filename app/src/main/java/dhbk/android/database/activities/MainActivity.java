@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     // replace LoginFragment with ShowPostFragment
     @Override
     public void onReplaceShowPostFragmentInteraction(@NonNull String emailText) {
+        // TODO: 6/4/16 check infor in edt is the same as database
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_FRAGMENT);
         if (fragment instanceof LoginFragment) {
             getSupportFragmentManager()
