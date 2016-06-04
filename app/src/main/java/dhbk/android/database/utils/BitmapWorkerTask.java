@@ -1,4 +1,4 @@
-package dhbk.android.database;
+package dhbk.android.database.utils;
 
 import android.content.Context;
 import android.content.res.Resources;

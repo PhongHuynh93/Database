@@ -1,4 +1,4 @@
-package dhbk.android.database;
+package dhbk.android.database.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import dhbk.android.database.R;
+import dhbk.android.database.utils.BitmapWorkerTask;
 
 public class MainActivity extends AppCompatActivity {
 
