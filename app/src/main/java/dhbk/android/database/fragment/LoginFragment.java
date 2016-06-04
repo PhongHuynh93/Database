@@ -68,9 +68,11 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO: 6/4/16 check password and email by access database before alllow to enter to login.
-                EditText emailEdt = (EditText) getActivity().findViewById(R.id.edt_email);
-                String emailText = emailEdt.getText().toString();
-                mListener.onReplaceFragmentInteraction(emailText);
+                if (mListener != null) {
+                    EditText emailEdt = (EditText) getActivity().findViewById(R.id.edt_email);
+                    String emailText = emailEdt.getText().toString();
+                    mListener.onReplaceFragmentInteraction(emailText);
+                }
             }
         });
     }
