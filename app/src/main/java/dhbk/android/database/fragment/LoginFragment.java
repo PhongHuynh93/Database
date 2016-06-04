@@ -77,6 +77,11 @@ public class LoginFragment extends Fragment {
         mPass = pass;
     }
 
+    // TODO: 6/4/16 implement this
+    public boolean checkUserAccount(String emailText, String passText) {
+        return true;
+    }
+
     private void scaleBackgroundImage() {
         ImageView backgroundImageView = (ImageView) getActivity().findViewById(R.id.image_login_bg);
         BitmapWorkerTask task = new BitmapWorkerTask(backgroundImageView, getActivity().getApplicationContext(), 500, 500);
@@ -92,7 +97,10 @@ public class LoginFragment extends Fragment {
                 if (mListener != null) {
                     EditText emailEdt = (EditText) getActivity().findViewById(R.id.edt_email);
                     String emailText = emailEdt.getText().toString();
-                    mListener.onReplaceShowPostFragmentInteraction(emailText);
+
+                    EditText passEdt = (EditText) getActivity().findViewById(R.id.edt_pass);
+                    String passText = passEdt.getText().toString();
+                    mListener.onReplaceShowPostFragmentInteraction(emailText, passText);
                 }
             }
         });
@@ -110,8 +118,10 @@ public class LoginFragment extends Fragment {
 
     }
 
+
+
     public interface OnFragmentInteractionListener {
-        void onReplaceShowPostFragmentInteraction(String name);
+        void onReplaceShowPostFragmentInteraction(String name, String passText);
         void onReplaceRegisterFragmentInteraction();
     }
 }

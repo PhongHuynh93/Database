@@ -68,8 +68,10 @@ public class RegisterFragment extends Fragment {
                 String passText = passEdt.getText().toString();
 
                 // TODO: 6/4/16 check duplicate email by entering database and compare
-                mListener.onRegisterFragmentInteractionAddDatabase(nameText, emailText, passText);
-                mListener.onRegisterFragmentInteractionAutoComplete(nameText, emailText, passText);
+                if (mListener != null) {
+                    mListener.onRegisterFragmentInteractionAddDatabase(nameText, emailText, passText);
+                    mListener.onRegisterFragmentInteractionAutoComplete(nameText, emailText, passText);
+                }
             }
         });
     }
