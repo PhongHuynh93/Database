@@ -1,46 +1,49 @@
 package dhbk.android.database.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import dhbk.android.database.R;
-import dhbk.android.database.utils.BitmapWorkerTask;
+import dhbk.android.database.fragment.LoginFragment;
+import dhbk.android.database.fragment.ShowPostFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener{
+    private static final String TAG_LOGIN_FRAGMENT = "login_fragment";
+    private static final String TAG_SHOW_POST_FRAGMENT = "show_post_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // : 6/3/2016 2 scale background image
-        scaleBackgroundImage();
-
-        setUpView();
+        addLoginFragment();
     }
 
-    private void scaleBackgroundImage() {
-        //  3 code lấy kích thước màn hình - nhưng ko dùng nữa
-//        DisplayMetrics metrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(metrics); // metrics.widthPixels
-        ImageView backgroundImageView = (ImageView) findViewById(R.id.image_login_bg);
-        BitmapWorkerTask task = new BitmapWorkerTask(backgroundImageView, getApplicationContext(), 500, 500);
-        task.execute(R.drawable.bg_apple);
+    private void addLoginFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        LoginFragment loginFragment = (LoginFragment) fm.findFragmentByTag(TAG_LOGIN_FRAGMENT);
+
+        // If the Fragment is non-null, then it is currently being
+        // retained across a configuration change.
+        if (loginFragment == null) {
+            loginFragment = LoginFragment.newInstance();
+            fm.beginTransaction().add(R.id.root_container, loginFragment, TAG_LOGIN_FRAGMENT).commit();
+        }
+
     }
 
-    private void setUpView() {
-        Button registerButton = (Button) findViewById(R.id.button_register);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
-                startActivity(registerIntent);
-            }
-        });
+    // replace LoginFragment with ShowPostFragment
+    @Override
+    public void onReplaceFragmentInteraction(@NonNull String emailText) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_FRAGMENT);
+        if (fragment instanceof LoginFragment) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.root_container, ShowPostFragment.newInstance(emailText), TAG_SHOW_POST_FRAGMENT)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
-
 }

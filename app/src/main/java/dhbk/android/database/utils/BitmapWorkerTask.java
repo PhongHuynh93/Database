@@ -9,13 +9,6 @@ import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
-/**
- * Created by phongdth.ky on 6/3/2016.
- */
-
-// : 6/3/2016 4 xử lý bitmap trong background, lý do là ta có thể pass URL đến image hay path đến file lưu image để nhờ
-    // asynctask lấy bitmap, 1 lý do nữa là nếu hình lớn thì quá trình decode sẽ lâu (máy chậm càng lâu nữa)
-    // http://stackoverflow.com/questions/29888944/should-bitmapfactory-decodebytearray-be-on-a-background-thread
 public class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
     private final Context mContext;

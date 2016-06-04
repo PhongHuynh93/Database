@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import dhbk.android.database.R;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

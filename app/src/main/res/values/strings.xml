@@ -21,4 +21,7 @@
     <string name="register_msg_agree">By using Yaho, you agree to our</string>
     <string name="register_msg_agree_2">Terms of Service and Privacy Policy</string>
     <string name="register_title_big">Register</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
