@@ -16,4 +16,5 @@
     <dimen name="register_horizontal_margin">35dp</dimen>
     <dimen name="register_vertical_margin">7dp</dimen>
     <dimen name="edittext_height">40dp</dimen>
+    <dimen name="edittext_padding">15dp</dimen>
 </resources>
