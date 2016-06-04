@@ -47,6 +47,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    // TODO: 6/4/16 cache bitmap
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
