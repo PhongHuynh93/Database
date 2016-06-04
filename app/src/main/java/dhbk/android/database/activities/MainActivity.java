@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_FRAGMENT);
         if (fragment instanceof LoginFragment) {
             User userAccount = ((LoginFragment)fragment).checkUserAccount(emailText, passText);
+
+
             if (userAccount != null) {
                 getSupportFragmentManager()
                         .beginTransaction()

@@ -135,7 +135,6 @@ public class LoginFragment extends Fragment {
 
     }
 
-
     public interface OnFragmentInteractionListener {
         void onReplaceShowPostFragmentInteraction(String name, String passText);
         void onReplaceRegisterFragmentInteraction();

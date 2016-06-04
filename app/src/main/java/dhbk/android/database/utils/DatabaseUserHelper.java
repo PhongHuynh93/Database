@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -95,8 +96,8 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     }
 
 
-    public void addUserToDatabase(User user) {
-        new AddUserTask(user).execute();
+    public void addUserToDatabase(@NonNull  User user) {
+        new AddUserTask().execute(user.getUserName(), user.getUserEmail(), user.getUserPass());
     }
 
 
@@ -139,24 +140,22 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
 
     // add useracount to database and return status
-    private static class AddUserTask extends AsyncTask<Void, Void, Boolean> {
-        private User mUser;
-
-        private AddUserTask(User user) {
-            this.mUser = user;
-        }
+    private static class AddUserTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Boolean doInBackground(String... params) {
+            if (params.length != 3) {
+                return false;
+            }
             try {
                 SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
                 try {
                     db.beginTransaction();
 
                     ContentValues userAccount = new ContentValues();
-                    userAccount.put(KEY_USER_NAME, mUser.getUserName());
-                    userAccount.put(KEY_USER_PASS, mUser.getUserPass());
-                    userAccount.put(KEY_USER_EMAIL, mUser.getUserEmail());
+                    userAccount.put(KEY_USER_NAME, params[0]);
+                    userAccount.put(KEY_USER_EMAIL, params[1]);
+                    userAccount.put(KEY_USER_PASS, params[2]);
 
                     db.insertOrThrow(TABLE_USERS, null, userAccount);
                     db.setTransactionSuccessful();
