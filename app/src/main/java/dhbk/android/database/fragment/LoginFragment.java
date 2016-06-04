@@ -16,6 +16,8 @@ import dhbk.android.database.utils.BitmapWorkerTask;
 
 public class LoginFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private String mEmail;
+    private String mPass;
 
     public LoginFragment() {
     }
@@ -29,6 +31,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_login, container, false);
+
     }
 
     @Override
@@ -50,11 +53,29 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mEmail != null && mPass != null) {
+            EditText edtName = (EditText) getActivity().findViewById(R.id.edt_email);
+            edtName.setText(mEmail);
+            EditText edtPass = (EditText) getActivity().findViewById(R.id.edt_pass);
+            edtPass.setText(mPass);
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+    public void setEmail(String email) {
+        mEmail = email;
+    }
+
+    public void setPass(String pass) {
+        mPass = pass;
+    }
 
     private void scaleBackgroundImage() {
         ImageView backgroundImageView = (ImageView) getActivity().findViewById(R.id.image_login_bg);
@@ -63,21 +84,34 @@ public class LoginFragment extends Fragment {
     }
 
     private void setUpView() {
-        Button registerButton = (Button) getActivity().findViewById(R.id.button_register);
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        Button loginButton = (Button) getActivity().findViewById(R.id.btn_log_in);
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: 6/4/16 check password and email by access database before alllow to enter to login.
                 if (mListener != null) {
                     EditText emailEdt = (EditText) getActivity().findViewById(R.id.edt_email);
                     String emailText = emailEdt.getText().toString();
-                    mListener.onReplaceFragmentInteraction(emailText);
+                    mListener.onReplaceShowPostFragmentInteraction(emailText);
                 }
             }
         });
+
+        Button registerButton = (Button) getActivity().findViewById(R.id.btn_register);
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 6/4/16 check password and email by access database before alllow to enter to login.
+                if (mListener != null) {
+                    mListener.onReplaceRegisterFragmentInteraction();
+                }
+            }
+        });
+
     }
 
     public interface OnFragmentInteractionListener {
-        void onReplaceFragmentInteraction(String name);
+        void onReplaceShowPostFragmentInteraction(String name);
+        void onReplaceRegisterFragmentInteraction();
     }
 }

@@ -1,13 +1,137 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="dhbk.android.database.fragment.RegisterFragment">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@color/grey_light">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/register_title_margin_top"
+        android:text="@string/register_title_big"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/login_title_text_size"/>
 
-</FrameLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/icon_beach"
+        android:src="@drawable/ic_beach_access_black_48dp"/>
+
+    <!--bold text-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_title"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:clickable="false"/>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:layout_marginTop="@dimen/register_vertical_margin_title">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:background="@drawable/edt_custome_register"
+            android:hint="@string/register_name"
+            android:inputType="textPersonName"
+            android:paddingLeft="@dimen/edittext_padding"
+            android:textColorHighlight="@color/grey_white"
+            android:id="@+id/edt_name"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:layout_marginTop="@dimen/register_vertical_margin">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:background="@drawable/edt_custome_register"
+            android:hint="@string/register_email"
+
+            android:inputType="textEmailAddress"
+            android:paddingLeft="@dimen/edittext_padding"
+
+            android:textColorHighlight="@color/grey_white"
+            android:id="@+id/edt_email"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:layout_marginTop="@dimen/register_vertical_margin">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:background="@drawable/edt_custome_register"
+            android:hint="@string/register_pass"
+
+            android:inputType="textPassword"
+            android:paddingLeft="@dimen/edittext_padding"
+
+            android:textColorHighlight="@color/grey_white"
+            android:id="@+id/edt_password"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:layout_marginTop="@dimen/register_vertical_margin">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:background="@drawable/edt_custome_register"
+            android:hint="@string/register_pass_again"
+
+            android:inputType="textPassword"
+            android:paddingLeft="@dimen/edittext_padding"
+
+            android:textColorHighlight="@color/grey_white"
+            android:id="@+id/edt_check_password"/>
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/register_horizontal_margin"
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:background="@color/grey_dark"
+        android:textColor="@android:color/white"
+        android:text="@string/register_button"
+        android:id="@+id/btn_register"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_msg_agree"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_msg_agree_2"/>
+</LinearLayout>

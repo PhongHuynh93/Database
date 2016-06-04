@@ -65,7 +65,7 @@
             app:cardElevation="@dimen/activity_vertical_margin">
 
             <Button
-                android:id="@+id/button_log_in"
+                android:id="@+id/btn_log_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/grey_white"
@@ -92,7 +92,7 @@
         app:cardCornerRadius="@dimen/activity_vertical_margin"
         app:cardElevation="@dimen/activity_vertical_margin">
         <Button
-            android:id="@+id/button_register"
+            android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/grey_white"
