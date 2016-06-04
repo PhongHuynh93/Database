@@ -11,9 +11,13 @@ import android.view.ViewGroup;
 import dhbk.android.database.R;
 
 public class ShowPostFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_NAME = "name";
+    private static final String ARG_EMAIL = "email";
+    private static final String ARG_IMG = "image";
 
-    private String mParam1;
+    private String mName;
+    private String mEmail;
+    private int mImg;
 
     private OnFragmentInteractionListener mListener;
 
@@ -22,10 +26,12 @@ public class ShowPostFragment extends Fragment {
     }
 
 
-    public static ShowPostFragment newInstance(String param1) {
+    public static ShowPostFragment newInstance(String name, String email, int img) {
         ShowPostFragment fragment = new ShowPostFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_NAME, name);
+        args.putString(ARG_EMAIL, email);
+        args.putInt(ARG_IMG, img);
         fragment.setArguments(args);
         return fragment;
     }
@@ -34,7 +40,9 @@ public class ShowPostFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mName = getArguments().getString(ARG_NAME);
+            mEmail = getArguments().getString(ARG_EMAIL);
+            mImg = getArguments().getInt(ARG_IMG);
         }
     }
 

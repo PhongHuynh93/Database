@@ -2,10 +2,12 @@ package dhbk.android.database.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import dhbk.android.database.R;
@@ -98,13 +100,46 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     }
 
 
-    public void getUserFromDatabase() {
+    // because email id unique, so we user email to get userAccount
+    @Nullable
+    public User getUserFromDatabase(String email) {
+        User userAccount = null;
+        try {
+            SQLiteDatabase db = getReadableDatabase();
 
+            Cursor userAccountCursor = db.query(
+                    TABLE_USERS,
+                    new String[]{KEY_USER_NAME, KEY_USER_EMAIL, KEY_USER_PASS, KEY_USER_PROFILE_PICTURE_URL},
+                    KEY_USER_EMAIL + " = ?",
+                    new String[]{email},
+                    null,
+                    null,
+                    null
+            );
+
+            if (userAccountCursor != null && userAccountCursor.getCount() > 0 && userAccountCursor.moveToFirst()) {
+                userAccount = new User(
+                        userAccountCursor.getString(0),
+                        userAccountCursor.getString(1),
+                        userAccountCursor.getString(2),
+                        userAccountCursor.getInt(3)
+                );
+            }
+
+            if (userAccountCursor != null) {
+                userAccountCursor.close();
+            }
+
+        } catch (SQLiteException e) {
+            Log.d(TAG, "Can get user account");
+        }
+
+        return userAccount;
     }
 
 
     // add useracount to database and return status
-    private static class AddUserTask extends AsyncTask<Void,Void, Boolean> {
+    private static class AddUserTask extends AsyncTask<Void, Void, Boolean> {
         private User mUser;
 
         private AddUserTask(User user) {
@@ -144,4 +179,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
             }
         }
     }
+
+    // get useraccount depends on email
+
 }

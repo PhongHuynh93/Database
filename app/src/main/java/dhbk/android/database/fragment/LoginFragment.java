@@ -12,7 +12,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import dhbk.android.database.R;
+import dhbk.android.database.models.User;
 import dhbk.android.database.utils.BitmapWorkerTask;
+import dhbk.android.database.utils.DatabaseUserHelper;
 
 public class LoginFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
@@ -85,10 +87,17 @@ public class LoginFragment extends Fragment {
         return mPass;
     }
 
-    // TODO: 6/4/16 implement this
-    public boolean checkUserAccount(String emailText, String passText) {
+    // check email and pass in database
+    @Nullable
+    public User checkUserAccount(String emailText, String passText) {
+        DatabaseUserHelper db = DatabaseUserHelper.getInstance(getActivity().getApplicationContext());
+        User userAccount = db.getUserFromDatabase(emailText);
+        if (userAccount != null && emailText.equals(userAccount.getUserEmail()) && passText.equals(userAccount.getUserPass())) {
+            return userAccount;
+        } else {
+            return null;
+        }
 
-        return true;
     }
 
     private void scaleBackgroundImage() {
