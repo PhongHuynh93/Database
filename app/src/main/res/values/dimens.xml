@@ -13,5 +13,6 @@
     <dimen name="login_register_button">40dp</dimen>
 
     <!--register-->
-    <dimen name="register_horizontal_margin">15dp</dimen>
+    <dimen name="register_horizontal_margin">35dp</dimen>
+    <dimen name="register_vertical_margin">7dp</dimen>
 </resources>
