@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import dhbk.android.database.R;
@@ -54,12 +55,15 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
             KEY_POST_TEXT + " TEXT" +
             ")";
 
+    // field
     private static DatabaseUserHelper sInstance;
+    private static Context mContext;
 
     // use this method to access to database
     public static synchronized DatabaseUserHelper getInstance(Context context) {
         if (sInstance == null) {
-            sInstance = new DatabaseUserHelper(context.getApplicationContext());
+            mContext = context.getApplicationContext();
+            sInstance = new DatabaseUserHelper(mContext);
         }
         return sInstance;
     }
@@ -90,21 +94,54 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
 
     public void addUserToDatabase(User user) {
-        // TODO: 6/4/16 add to database in asynctask
-        SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
-        try {
-            ContentValues values = new ContentValues();
-            values.put(KEY_USER_NAME, user.getUserName());
-            values.put(KEY_USER_PASS, user.getUserPass());
-            values.put(KEY_USER_EMAIL, user.getUserEmail());
+        new AddUserTask(user).execute();
+    }
 
-            db.insertOrThrow(TABLE_USERS, null, values);
-            db.setTransactionSuccessful();
-        } catch (SQLiteException e) {
-            Log.d(TAG, "Error while trying to add post to database");
-        } finally {
-            db.endTransaction();
+
+    public void getUserFromDatabase() {
+
+    }
+
+
+    // add useracount to database and return status
+    private static class AddUserTask extends AsyncTask<Void,Void, Boolean> {
+        private User mUser;
+
+        private AddUserTask(User user) {
+            this.mUser = user;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
+                try {
+                    db.beginTransaction();
+
+                    ContentValues userAccount = new ContentValues();
+                    userAccount.put(KEY_USER_NAME, mUser.getUserName());
+                    userAccount.put(KEY_USER_PASS, mUser.getUserPass());
+                    userAccount.put(KEY_USER_EMAIL, mUser.getUserEmail());
+
+                    db.insertOrThrow(TABLE_USERS, null, userAccount);
+                    db.setTransactionSuccessful();
+                } catch (SQLiteException e) {
+                    throw new SQLiteException(e.toString());
+                } finally {
+                    db.endTransaction();
+                }
+            } catch (SQLiteException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean error) {
+            super.onPostExecute(error);
+            if (!error) {
+                Log.d(TAG, "Error when add database");
+            }
         }
     }
 }

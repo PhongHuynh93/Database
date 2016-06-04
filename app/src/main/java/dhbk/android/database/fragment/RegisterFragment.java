@@ -67,7 +67,6 @@ public class RegisterFragment extends Fragment {
                 EditText passEdt = (EditText) getActivity().findViewById(R.id.edt_password);
                 String passText = passEdt.getText().toString();
 
-                // TODO: 6/4/16 check duplicate email by entering database and compare
                 if (mListener != null) {
                     mListener.onRegisterFragmentInteractionAddDatabase(nameText, emailText, passText);
                     mListener.onRegisterFragmentInteractionAutoComplete(nameText, emailText, passText);

@@ -77,8 +77,17 @@ public class LoginFragment extends Fragment {
         mPass = pass;
     }
 
+    public String getEmail() {
+        return mEmail;
+    }
+
+    public String getPass() {
+        return mPass;
+    }
+
     // TODO: 6/4/16 implement this
     public boolean checkUserAccount(String emailText, String passText) {
+
         return true;
     }
 
@@ -96,11 +105,11 @@ public class LoginFragment extends Fragment {
                 // TODO: 6/4/16 check password and email by access database before alllow to enter to login.
                 if (mListener != null) {
                     EditText emailEdt = (EditText) getActivity().findViewById(R.id.edt_email);
-                    String emailText = emailEdt.getText().toString();
+                    setEmail(emailEdt.getText().toString());
 
                     EditText passEdt = (EditText) getActivity().findViewById(R.id.edt_pass);
-                    String passText = passEdt.getText().toString();
-                    mListener.onReplaceShowPostFragmentInteraction(emailText, passText);
+                    setPass(passEdt.getText().toString());
+                    mListener.onReplaceShowPostFragmentInteraction(getEmail(), getPass());
                 }
             }
         });
@@ -109,7 +118,6 @@ public class LoginFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 6/4/16 check password and email by access database before alllow to enter to login.
                 if (mListener != null) {
                     mListener.onReplaceRegisterFragmentInteraction();
                 }
@@ -117,7 +125,6 @@ public class LoginFragment extends Fragment {
         });
 
     }
-
 
 
     public interface OnFragmentInteractionListener {
