@@ -11,4 +11,7 @@
     <color name="lime">#AFB42B</color>
     <color name="orange">#FF9800</color>
     <color name="blue">#2196F3</color>
+    <color name="yellow_light">#FFF59D</color>
+    <color name="grey_light">#E0E0E0</color>
+    <color name="grey_dark">#616161</color>
 </resources>

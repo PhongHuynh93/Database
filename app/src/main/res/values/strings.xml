@@ -18,6 +18,7 @@
     <string name="register_pass">Password</string>
     <string name="register_pass_again">Password (again)</string>
     <string name="register_button">Join with us!</string>
-    <string name="register_msg_agree">By using Yaho, you agree to our Terms of Service and Privacy Policy</string>
+    <string name="register_msg_agree">By using Yaho, you agree to our</string>
+    <string name="register_msg_agree_2">Terms of Service and Privacy Policy</string>
     <string name="register_title_big">Register</string>
 </resources>

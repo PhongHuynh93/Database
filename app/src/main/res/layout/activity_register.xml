@@ -10,14 +10,15 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:background="@color/grey_light"
     tools:context=".RegisterActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/login_title_margin_top"
+        android:layout_marginTop="@dimen/register_title_margin_top"
         android:text="@string/register_title_big"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="@dimen/login_title_text_size"/>
 
     <ImageView
@@ -26,17 +27,22 @@
         android:contentDescription="@string/icon_beach"
         android:src="@drawable/ic_beach_access_black_48dp"/>
 
+    <!--bold text-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/register_title"/>
+        android:text="@string/register_title"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:clickable="false"/>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:layout_marginLeft="@dimen/register_horizontal_margin"
         android:layout_marginRight="@dimen/register_horizontal_margin"
-        android:layout_marginTop="@dimen/register_vertical_margin">
+        android:layout_marginTop="@dimen/register_vertical_margin_title">
 
         <EditText
             android:layout_width="match_parent"
@@ -113,10 +119,19 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/register_horizontal_margin"
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:background="@color/grey_dark"
+        android:textColor="@android:color/white"
         android:text="@string/register_button"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/register_msg_agree"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_msg_agree_2"/>
 </LinearLayout>
