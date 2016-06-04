@@ -66,4 +66,13 @@ public class DatabaseUserHelper extends SQLiteOpenHelper{
     }
 
 
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion != newVersion) {
+            // Simplest implementation is to drop all old tables and recreate them
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_POSTS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+            onCreate(db);
+        }
+    }
 }
