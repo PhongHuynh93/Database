@@ -73,7 +73,7 @@ public class ShowPostFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setTitle(mName);
     }
 

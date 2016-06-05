@@ -1,5 +1,7 @@
 package dhbk.android.database.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +21,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private static final String TAG_LOGIN_FRAGMENT = "login_fragment";
     private static final String TAG_SHOW_POST_FRAGMENT = "show_post_fragment";
     private static final String TAG_REGISTER_FRAGMENT = "register_fragment";
+    private static final String PREF_NAME = "sharepreference_name";
+    private static final String PREF_PASS = "sharepreference_pass";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +52,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         if (fragment instanceof LoginFragment) {
             User userAccount = ((LoginFragment)fragment).checkUserAccount(emailText, passText);
 
-
             if (userAccount != null) {
+                // authen success -> save to sharepreference to not type again
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(PREF_NAME, userAccount.getUserName());
+                editor.putString(PREF_PASS, userAccount.getUserPass());
+                editor.apply();
+
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.root_container, ShowPostFragment.newInstance(userAccount.getUserName(), userAccount.getUserEmail(), userAccount.getUserImg()), TAG_SHOW_POST_FRAGMENT)
