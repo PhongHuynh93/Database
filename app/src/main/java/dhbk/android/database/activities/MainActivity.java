@@ -15,14 +15,13 @@ import dhbk.android.database.fragment.LoginFragment;
 import dhbk.android.database.fragment.RegisterFragment;
 import dhbk.android.database.fragment.ShowPostFragment;
 import dhbk.android.database.models.User;
+import dhbk.android.database.utils.Constant;
 import dhbk.android.database.utils.DatabaseUserHelper;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, ShowPostFragment.OnFragmentInteractionListener{
     private static final String TAG_LOGIN_FRAGMENT = "login_fragment";
     private static final String TAG_SHOW_POST_FRAGMENT = "show_post_fragment";
     private static final String TAG_REGISTER_FRAGMENT = "register_fragment";
-    private static final String PREF_NAME = "sharepreference_name";
-    private static final String PREF_PASS = "sharepreference_pass";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +53,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
             if (userAccount != null) {
                 // authen success -> save to sharepreference to not type again
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(PREF_NAME, userAccount.getUserName());
-                editor.putString(PREF_PASS, userAccount.getUserPass());
+                editor.putString(Constant.PREF_NAME, userAccount.getUserEmail());
+                editor.putString(Constant.PREF_PASS, userAccount.getUserPass());
                 editor.apply();
 
                 getSupportFragmentManager()

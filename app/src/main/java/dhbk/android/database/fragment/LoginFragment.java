@@ -1,6 +1,7 @@
 package dhbk.android.database.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,9 +15,11 @@ import android.widget.ImageView;
 import dhbk.android.database.R;
 import dhbk.android.database.models.User;
 import dhbk.android.database.utils.BitmapWorkerTask;
+import dhbk.android.database.utils.Constant;
 import dhbk.android.database.utils.DatabaseUserHelper;
 
 public class LoginFragment extends Fragment {
+
     private OnFragmentInteractionListener mListener;
     private String mEmail;
     private String mPass;
@@ -25,8 +28,7 @@ public class LoginFragment extends Fragment {
     }
 
     public static LoginFragment newInstance() {
-        LoginFragment fragment = new LoginFragment();
-        return fragment;
+        return new LoginFragment();
     }
 
     @Override
@@ -58,10 +60,20 @@ public class LoginFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        // set value at another time in order to not type again
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String pref_name = sharedPref.getString(Constant.PREF_NAME, "");
+        String pref_pass = sharedPref.getString(Constant.PREF_PASS, "");
+        EditText edtName = (EditText) getActivity().findViewById(R.id.edt_email);
+        edtName.setText(pref_name);
+        EditText edtPass = (EditText) getActivity().findViewById(R.id.edt_pass);
+        edtPass.setText(pref_pass);
+
+        // after register account, 2 var will have value, so set this login fragment
         if (mEmail != null && mPass != null) {
-            EditText edtName = (EditText) getActivity().findViewById(R.id.edt_email);
+            edtName = (EditText) getActivity().findViewById(R.id.edt_email);
             edtName.setText(mEmail);
-            EditText edtPass = (EditText) getActivity().findViewById(R.id.edt_pass);
+            edtPass = (EditText) getActivity().findViewById(R.id.edt_pass);
             edtPass.setText(mPass);
         }
     }
