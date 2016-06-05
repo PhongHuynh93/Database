@@ -28,4 +28,7 @@
 
     <!--show post fragment-->
     <string name="image_show_post">Show Image Post</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
