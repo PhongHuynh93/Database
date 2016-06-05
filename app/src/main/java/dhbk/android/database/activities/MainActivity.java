@@ -1,6 +1,7 @@
 package dhbk.android.database.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -111,4 +112,29 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+    // post image to showpostfragment
+    @Override
+    public void onPostImageToRecyclerView() {
+        getImageFromGaleryFolder();
+    }
+
+    private void getImageFromGaleryFolder() {
+        Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, Constant.RESULT_LOAD_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Fragment fragmentLogin = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
+            if (fragmentLogin instanceof ShowPostFragment) {
+                ((ShowPostFragment)fragmentLogin).addImageToImgView(data);
+            }
+        }
+    }
+
 }

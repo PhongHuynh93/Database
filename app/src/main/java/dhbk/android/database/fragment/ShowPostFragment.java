@@ -1,8 +1,12 @@
 package dhbk.android.database.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import dhbk.android.database.R;
 
@@ -70,6 +75,7 @@ public class ShowPostFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_show_post, container, false);
     }
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -89,6 +95,16 @@ public class ShowPostFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_add_post) {
+            // TODO: 6/5/16 add image from galery to database
+            if (mListener != null) {
+                mListener.onPostImageToRecyclerView();
+                return true;
+            }
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -98,8 +114,26 @@ public class ShowPostFragment extends Fragment {
         mListener = null;
     }
 
+    // add image to ImgView in layout to test
+    public void addImageToImgView(Intent data) {
+        Uri selectedImage = data.getData();
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+        if(cursor!=null && cursor.getCount()>0 && cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+
+            ImageView imageView = (ImageView) getActivity().findViewById(R.id.image_show_post);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+            cursor.close();
+        }
+
+
+    }
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+        void onPostImageToRecyclerView();
     }
 }
