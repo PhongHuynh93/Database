@@ -39,6 +39,8 @@ public class BitmapWorkerFromFileTask extends AsyncTask<Integer, Void, Bitmap> {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mPicturePath, options);
+
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 

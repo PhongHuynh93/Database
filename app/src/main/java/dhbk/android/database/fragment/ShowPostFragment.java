@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import dhbk.android.database.R;
+import dhbk.android.database.utils.BitmapWorkerFromFileTask;
 
 public class ShowPostFragment extends Fragment {
     private static final String ARG_NAME = "name";
@@ -128,19 +128,11 @@ public class ShowPostFragment extends Fragment {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
 
-            // scale image from galery and show image in imageView
-
-            scaleBackgroundImage(BitmapFactory.decodeFile(picturePath), IMAGE_WIDTH, IMAGE_HEIGHT);
-
+            ImageView backgroundImageView = (ImageView) getActivity().findViewById(R.id.image_show_post);
+            BitmapWorkerFromFileTask bitmapWorkerFromFileTask = new BitmapWorkerFromFileTask(backgroundImageView, picturePath);
+            bitmapWorkerFromFileTask.execute(IMAGE_HEIGHT, IMAGE_WIDTH);
             cursor.close();
         }
-    }
-
-
-    private void scaleBackgroundImage(Bitmap bitmapToScale, int newWidth, int newHeight) {
-        out = Bitmap.createScaledBitmap(bitmapToScale, newWidth, newHeight, false);
-        ImageView backgroundImageView = (ImageView) getActivity().findViewById(R.id.image_show_post);
-        backgroundImageView.setImageBitmap(out);
     }
 
     public interface OnFragmentInteractionListener {
