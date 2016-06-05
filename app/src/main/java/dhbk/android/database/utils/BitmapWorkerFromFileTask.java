@@ -1,7 +1,5 @@
 package dhbk.android.database.utils;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -9,28 +7,21 @@ import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
-
-// scale drawable image (png, jpg)
-public class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
+// scale bitmap from file
+public class BitmapWorkerFromFileTask extends AsyncTask<Integer, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
-    private final Context mContext;
-    private final int mReqWidth;
-    private final int mReqHeight;
-    private int data = 0;
+    private final String mPicturePath;
 
-    public BitmapWorkerTask(ImageView imageView, Context context, int reqWidth, int reqHeight) {
-        // Use a WeakReference to ensure the ImageView can be garbage collected
+    public BitmapWorkerFromFileTask(ImageView imageView, String picturePath) {
         imageViewReference = new WeakReference<ImageView>(imageView);
-        mContext = context.getApplicationContext();
-        mReqWidth = reqWidth;
-        mReqHeight = reqHeight;
+        mPicturePath = picturePath;
     }
 
-    // Decode image in background.
     @Override
     protected Bitmap doInBackground(Integer... params) {
-        data = params[0];
-        return decodeSampledBitmapFromResource(mContext.getResources(), data, mReqWidth, mReqHeight);
+        int reqWidth = params[0];
+        int reqHeight = params[1];
+        return decodeSampledBitmapFromResource(reqWidth, reqHeight);
     }
 
     // Once complete, see if ImageView is still around and set bitmap.
@@ -44,20 +35,16 @@ public class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
         }
     }
 
-    private Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
-
+    private Bitmap decodeSampledBitmapFromResource(int reqWidth, int reqHeight) {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
-
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(res, resId, options);
+        return BitmapFactory.decodeFile(mPicturePath, options);
     }
 
     private int calculateInSampleSize(

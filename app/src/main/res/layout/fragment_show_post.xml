@@ -22,7 +22,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/image_show_post"
         android:contentDescription="@string/image_show_post"/>
 </android.support.design.widget.CoordinatorLayout>

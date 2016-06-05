@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -130,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     public void onPostImageToRecyclerView() {
         if (Build.VERSION.SDK_INT >= 23) {
             checkPermissions();
+        } else {
+            getImageFromGaleryFolder();
         }
     }
 
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 // END PERMISSION CHECK
 
-    @RequiresPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    // get image from galery by sending intent
     private void getImageFromGaleryFolder() {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, Constant.RESULT_LOAD_IMAGE);
