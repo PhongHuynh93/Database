@@ -3,7 +3,6 @@ package dhbk.android.database.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -34,7 +33,6 @@ public class ShowPostFragment extends Fragment {
     private int mImg;
 
     private OnFragmentInteractionListener mListener;
-    private Bitmap out;
 
     public ShowPostFragment() {
         // Required empty public constructor
@@ -116,7 +114,6 @@ public class ShowPostFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        out.recycle(); // remove bitmap when fragment disappear
     }
 
     // add image to ImgView in layout to test

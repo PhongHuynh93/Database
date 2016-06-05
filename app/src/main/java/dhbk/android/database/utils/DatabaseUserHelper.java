@@ -26,7 +26,6 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     // table
     private static final String TABLE_USERS = "user_accounts";
-    private static final String TABLE_POSTS = "user_posts";
 
     // user accounts Table Columns
     private static final String KEY_USER_ID = "_id";
@@ -34,13 +33,16 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     private static final String KEY_USER_EMAIL = "userEmail";
     private static final String KEY_USER_PASS = "userPass";
     private static final String KEY_USER_PROFILE_PICTURE_URL = "profilePictureUrl";
+    private static final String KEY_USER_HAS_POST_TABLE = "hasPostTable";
 
     // user posts Table Columns, const thứ 2 là tham số liên kết với table "account"
     private static final String KEY_POST_ID = "_id";
-    private static final String KEY_POST_USER_ID_FK = "userId";
+    private static final String KEY_POST_IMAGE = "bitmapImage";
     private static final String KEY_POST_TEXT = "text";
 
+
     // create table user accounts
+    // TODO: 6/5/16 change string to string builder
     private static final String KEY_CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USERS +
             "(" +
             KEY_USER_ID + " INTEGER PRIMARY KEY," +
@@ -48,15 +50,16 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
             KEY_USER_EMAIL + " TEXT NOT NULL UNIQUE," +
             KEY_USER_PASS + " TEXT NOT NULL," +
             KEY_USER_PROFILE_PICTURE_URL + " INT DEFAULT " + R.mipmap.ic_launcher +
-            ")";
+            KEY_USER_HAS_POST_TABLE + " INTEGER NOT NULL DEFAULT 0" +
+            ")"; // mặc định mỗi user chưa có 1 table của riêng họ -> gán 0 là mặc định
 
-    // create table user posts
-    private static final String KEY_CREATE_POST_TABLE = "CREATE TABLE " + TABLE_POSTS +
-            "(" +
-            KEY_POST_ID + " INTEGER PRIMARY KEY" + "," +// Define a primary key
-            KEY_POST_USER_ID_FK + " INTEGER REFERENCES " + TABLE_USERS + "," + // Define a foreign key
-            KEY_POST_TEXT + " TEXT" +
-            ")";
+//    // create table user posts
+//    private static final String KEY_CREATE_POST_TABLE = "CREATE TABLE " + TABLE_POSTS +
+//            "(" +
+//            KEY_POST_ID + " INTEGER PRIMARY KEY" + "," +// Define a primary key
+//            KEY_POST_USER_ID_FK + " INTEGER REFERENCES " + TABLE_USERS + "," + // Define a foreign key
+//            KEY_POST_TEXT + " TEXT" +
+//            ")";
 
     // field
     private static DatabaseUserHelper sInstance;
@@ -81,7 +84,6 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(KEY_CREATE_USER_TABLE);
-        db.execSQL(KEY_CREATE_POST_TABLE);
     }
 
 
@@ -89,7 +91,6 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
             // Simplest implementation is to drop all old tables and recreate them
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_POSTS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
             onCreate(db);
         }
