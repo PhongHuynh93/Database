@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.root_container, ShowPostFragment.newInstance(userAccount.getUserName(), userAccount.getUserEmail(), userAccount.getUserImg()), TAG_SHOW_POST_FRAGMENT)
+                        .replace(R.id.root_container, ShowPostFragment.newInstance(userAccount.getUserName(), userAccount.getUserEmail(), userAccount.getUserImg(), userAccount.getHasPost()), TAG_SHOW_POST_FRAGMENT)
                         .addToBackStack(null)
                         .commit();
             } else {
@@ -130,8 +130,17 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         if (Build.VERSION.SDK_INT >= 23) {
             checkPermissions();
         } else {
-            getImageFromGaleryFolder();
+
+            // FIXME: 6/5/16 add another fragment, wait until user click add image to wake this method up
+//            getImageFromGaleryFolder();
         }
+    }
+
+    // tao table user posts tên là email
+    @Override
+    public void onCreateUserPostTable(@NonNull String email) {
+        DatabaseUserHelper db = DatabaseUserHelper.getInstance(getApplicationContext());
+        db.createPostTable(email);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -174,7 +183,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-// END PERMISSION CHECK
 
     // get image from galery by sending intent
     private void getImageFromGaleryFolder() {
@@ -189,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         if (requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Fragment fragmentLogin = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
             if (fragmentLogin instanceof ShowPostFragment) {
-                ((ShowPostFragment) fragmentLogin).addImageToImgView(data);
+                ((ShowPostFragment) fragmentLogin).addImageToDbAndRefreshRcv(data);
             }
         }
     }

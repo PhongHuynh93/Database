@@ -17,6 +17,7 @@ public class BitmapWorkerFromFileTask extends AsyncTask<Integer, Void, Bitmap> {
         mPicturePath = picturePath;
     }
 
+    // TODO: add post to recycler view
     @Override
     protected Bitmap doInBackground(Integer... params) {
         int reqWidth = params[0];

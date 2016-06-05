@@ -16,10 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import dhbk.android.database.R;
-import dhbk.android.database.utils.BitmapWorkerFromFileTask;
 
 public class ShowPostFragment extends Fragment {
     private static final String ARG_NAME = "name";
@@ -27,24 +25,27 @@ public class ShowPostFragment extends Fragment {
     private static final String ARG_IMG = "image";
     private static final int IMAGE_HEIGHT = 500; // height + width of scaled image
     private static final int IMAGE_WIDTH = 500;
+    private static final String ARG_HAS_POST = "hasPost";
 
     private String mName;
     private String mEmail;
     private int mImg;
 
     private OnFragmentInteractionListener mListener;
+    private int mHasPost; // giá trị 0(chưa có table posts của người này trong database) hay 1(đã có table post của người này trong database)
 
     public ShowPostFragment() {
         // Required empty public constructor
     }
 
 
-    public static ShowPostFragment newInstance(String name, String email, int img) {
+    public static ShowPostFragment newInstance(String name, String email, int img, int hasPost) {
         ShowPostFragment fragment = new ShowPostFragment();
         Bundle args = new Bundle();
         args.putString(ARG_NAME, name);
         args.putString(ARG_EMAIL, email);
         args.putInt(ARG_IMG, img);
+        args.putInt(ARG_HAS_POST, hasPost);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,6 +68,7 @@ public class ShowPostFragment extends Fragment {
             mName = getArguments().getString(ARG_NAME);
             mEmail = getArguments().getString(ARG_EMAIL);
             mImg = getArguments().getInt(ARG_IMG);
+            mHasPost = getArguments().getInt(ARG_HAS_POST);
         }
     }
 
@@ -87,6 +89,8 @@ public class ShowPostFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         setHasOptionsMenu(true);
         toolbar.setTitle(mName);
+
+        showPostFromUser();
     }
 
     @Override
@@ -116,8 +120,8 @@ public class ShowPostFragment extends Fragment {
         mListener = null;
     }
 
-    // add image to ImgView in layout to test
-    public void addImageToImgView(Intent data) {
+    // add image to database and refresh recycler view
+    public void addImageToDbAndRefreshRcv(Intent data) {
         Uri selectedImage = data.getData();
         String[] filePathColumn = { MediaStore.Images.Media.DATA };
         Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
@@ -125,15 +129,33 @@ public class ShowPostFragment extends Fragment {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
 
-            ImageView backgroundImageView = (ImageView) getActivity().findViewById(R.id.image_show_post);
-            BitmapWorkerFromFileTask bitmapWorkerFromFileTask = new BitmapWorkerFromFileTask(backgroundImageView, picturePath);
-            bitmapWorkerFromFileTask.execute(IMAGE_HEIGHT, IMAGE_WIDTH);
+            // FIXME: 6/5/16 add post to this
+//            RecyclerView backgroundRclv = (RecyclerView) getActivity().findViewById(R.id.recyclerview_show_posts);
+//            BitmapWorkerFromFileTask bitmapWorkerFromFileTask = new BitmapWorkerFromFileTask(backgroundRclv, picturePath);
+//            bitmapWorkerFromFileTask.execute(IMAGE_HEIGHT, IMAGE_WIDTH);
+
             cursor.close();
+        }
+    }
+
+    private void showPostFromUser() {
+        if (mHasPost == 0) {
+            // create table
+            if (mListener != null) {
+                mListener.onCreateUserPostTable(mEmail);
+            }
+            // change mHasPost
+            mHasPost = 1;
+        } else {
+            // query table to show post in recycler
+            // TODO: 6/5/16 query showpost table
+
         }
     }
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
         void onPostImageToRecyclerView();
+        void onCreateUserPostTable(String email); // tạo table tên là email
     }
 }

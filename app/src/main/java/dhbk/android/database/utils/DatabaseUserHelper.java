@@ -22,7 +22,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     // database
     private static final String DATABASE_NAME = "yaho";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // table
     private static final String TABLE_USERS = "user_accounts";
@@ -50,7 +50,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
             KEY_USER_EMAIL + " TEXT NOT NULL UNIQUE," +
             KEY_USER_PASS + " TEXT NOT NULL," +
             KEY_USER_PROFILE_PICTURE_URL + " INT DEFAULT " + R.mipmap.ic_launcher +
-            KEY_USER_HAS_POST_TABLE + " INTEGER NOT NULL DEFAULT 0" +
+            KEY_USER_HAS_POST_TABLE + " INTEGER DEFAULT 0" +
             ")"; // mặc định mỗi user chưa có 1 table của riêng họ -> gán 0 là mặc định
 
 //    // create table user posts
@@ -97,7 +97,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     }
 
 
-    public void addUserToDatabase(@NonNull  User user) {
+    public void addUserToDatabase(@NonNull User user) {
         new AddUserTask().execute(user.getUserName(), user.getUserEmail(), user.getUserPass());
     }
 
@@ -111,7 +111,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
             Cursor userAccountCursor = db.query(
                     TABLE_USERS,
-                    new String[]{KEY_USER_NAME, KEY_USER_EMAIL, KEY_USER_PASS, KEY_USER_PROFILE_PICTURE_URL},
+                    new String[]{KEY_USER_NAME, KEY_USER_EMAIL, KEY_USER_PASS, KEY_USER_PROFILE_PICTURE_URL, KEY_USER_HAS_POST_TABLE},
                     KEY_USER_EMAIL + " = ?",
                     new String[]{email},
                     null,
@@ -124,7 +124,8 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
                         userAccountCursor.getString(0),
                         userAccountCursor.getString(1),
                         userAccountCursor.getString(2),
-                        userAccountCursor.getInt(3)
+                        userAccountCursor.getInt(3),
+                        userAccountCursor.getInt(4)
                 );
             }
 
@@ -139,6 +140,18 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
         return userAccount;
     }
 
+
+    // tạo table post user với tên là email
+    public void createPostTable(String email) {
+        final String KEY_CREATE_POST_TABLE = "CREATE TABLE " + email +
+                "(" +
+                KEY_POST_ID + " INTEGER PRIMARY KEY," +
+                KEY_POST_TEXT + " TEXT NOT NULL," + // post được quyền null
+                KEY_POST_IMAGE + " BLOB NOT NULL" + // image được quyền null
+                ")";
+        SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
+        db.execSQL(KEY_CREATE_USER_TABLE);
+    }
 
     // add useracount to database and return status
     private static class AddUserTask extends AsyncTask<String, Void, Boolean> {

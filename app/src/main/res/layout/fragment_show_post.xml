@@ -20,9 +20,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/image_show_post"
-        android:contentDescription="@string/image_show_post"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_show_posts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </android.support.design.widget.CoordinatorLayout>
