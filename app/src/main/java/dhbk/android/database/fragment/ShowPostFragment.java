@@ -3,6 +3,8 @@ package dhbk.android.database.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -10,30 +12,29 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import dhbk.android.database.R;
-import dhbk.android.database.utils.BitmapWorkerFromFileTask;
 
 public class ShowPostFragment extends Fragment {
     private static final String ARG_NAME = "name";
     private static final String ARG_EMAIL = "email";
     private static final String ARG_IMG = "image";
-    private static final int IMAGE_HEIGHT = 500; // height of image in a post
+    private static final int IMAGE_HEIGHT = 500; // height + width of scaled image
+    private static final int IMAGE_WIDTH = 500;
 
     private String mName;
     private String mEmail;
     private int mImg;
 
     private OnFragmentInteractionListener mListener;
+    private Bitmap out;
 
     public ShowPostFragment() {
         // Required empty public constructor
@@ -115,6 +116,7 @@ public class ShowPostFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        out.recycle(); // remove bitmap when fragment disappear
     }
 
     // add image to ImgView in layout to test
@@ -126,21 +128,19 @@ public class ShowPostFragment extends Fragment {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
 
-            // get width of screen
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            WindowManager wm = (WindowManager) getActivity().getApplicationContext().getSystemService(Context.WINDOW_SERVICE); // the results will be higher than using the activity context object or the getWindowManager() shortcut
-            wm.getDefaultDisplay().getMetrics(displayMetrics);
-
             // scale image from galery and show image in imageView
-            scaleBackgroundImage(picturePath, displayMetrics.widthPixels, IMAGE_HEIGHT);
+
+            scaleBackgroundImage(BitmapFactory.decodeFile(picturePath), IMAGE_WIDTH, IMAGE_HEIGHT);
+
             cursor.close();
         }
     }
 
-    private void scaleBackgroundImage(String picturePath,int resWidth, int resHeight) {
+
+    private void scaleBackgroundImage(Bitmap bitmapToScale, int newWidth, int newHeight) {
+        out = Bitmap.createScaledBitmap(bitmapToScale, newWidth, newHeight, false);
         ImageView backgroundImageView = (ImageView) getActivity().findViewById(R.id.image_show_post);
-        BitmapWorkerFromFileTask task = new BitmapWorkerFromFileTask(backgroundImageView, picturePath);
-        task.execute(resWidth, resHeight);
+        backgroundImageView.setImageBitmap(out);
     }
 
     public interface OnFragmentInteractionListener {
