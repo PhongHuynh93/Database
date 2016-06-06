@@ -22,7 +22,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     // database
     private static final String DATABASE_NAME = "yaho";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
     // table
     private static final String TABLE_USERS = "user_accounts";
@@ -33,7 +33,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     private static final String KEY_USER_EMAIL = "userEmail";
     private static final String KEY_USER_PASS = "userPass";
     private static final String KEY_USER_PROFILE_PICTURE_URL = "profilePictureUrl";
-    private static final String KEY_USER_HAS_POST_TABLE = "hasPostTable";
+    private static final String KEY_USER_HAS_POST_TABLE = "hasPostTable"; // có table Post chưa
 
     // user posts Table Columns, const thứ 2 là tham số liên kết với table "account"
     private static final String KEY_POST_ID = "_id";
@@ -49,7 +49,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
             KEY_USER_NAME + " TEXT NOT NULL," +
             KEY_USER_EMAIL + " TEXT NOT NULL UNIQUE," +
             KEY_USER_PASS + " TEXT NOT NULL," +
-            KEY_USER_PROFILE_PICTURE_URL + " INT DEFAULT " + R.mipmap.ic_launcher +
+            KEY_USER_PROFILE_PICTURE_URL + " INT DEFAULT " + R.mipmap.ic_launcher + "," +
             KEY_USER_HAS_POST_TABLE + " INTEGER DEFAULT 0" +
             ")"; // mặc định mỗi user chưa có 1 table của riêng họ -> gán 0 là mặc định
 
@@ -143,14 +143,39 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     // tạo table post user với tên là email
     public void createPostTable(String email) {
-        final String KEY_CREATE_POST_TABLE = "CREATE TABLE " + email +
+        final String KEY_CREATE_POST_TABLE = "CREATE TABLE " + removeSpecialChar(email) +
                 "(" +
                 KEY_POST_ID + " INTEGER PRIMARY KEY," +
                 KEY_POST_TEXT + " TEXT NOT NULL," + // post được quyền null
                 KEY_POST_IMAGE + " BLOB NOT NULL" + // image được quyền null
                 ")";
-        SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
-        db.execSQL(KEY_CREATE_USER_TABLE);
+        try {
+            SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
+            updateSQL(email);
+            db.execSQL(KEY_CREATE_POST_TABLE);
+        } catch (SQLiteException e) {
+            Log.e(TAG, "createPostTable: " + e.toString());
+        }
+
+    }
+
+    // update column hasPost table User
+    public void updateSQL(String email) {
+        try {
+            ContentValues drinkValues = new ContentValues();
+            drinkValues.put(KEY_USER_HAS_POST_TABLE, 1);
+            SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
+            db.update(TABLE_USERS, drinkValues,KEY_USER_EMAIL + " = ?",new String[] {email});
+        } catch (SQLiteException e) {
+            Log.e(TAG, "updateSQL: " + e.toString() );
+        }
+
+    }
+
+    private String removeSpecialChar(String email) {
+        email = email.replace("@", "");
+        email = email.replace(".", "");
+        return email;
     }
 
     // add useracount to database and return status

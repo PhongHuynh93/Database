@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import dhbk.android.database.R;
+import dhbk.android.database.fragment.AddPostFragment;
 import dhbk.android.database.fragment.LoginFragment;
 import dhbk.android.database.fragment.RegisterFragment;
 import dhbk.android.database.fragment.ShowPostFragment;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private static final String TAG_SHOW_POST_FRAGMENT = "show_post_fragment";
     private static final String TAG_REGISTER_FRAGMENT = "register_fragment";
     private static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 100;
+    private static final String TAG_ADD_POST_FRAGMENT = "add_post_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         databaseUserHelper.addUserToDatabase(user);
     }
 
-    // TODO: 6/4/16 interact with showpost fragment
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -136,11 +137,24 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         }
     }
 
-    // tao table user posts tên là email
+    // tao table user posts tên là email chỉ khi
     @Override
     public void onCreateUserPostTable(@NonNull String email) {
         DatabaseUserHelper db = DatabaseUserHelper.getInstance(getApplicationContext());
         db.createPostTable(email);
+    }
+
+    // replace ShowPostFragment with AddPostFragment
+    @Override
+    public void onReplaceAddPostFrag() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
+        if (fragment instanceof ShowPostFragment) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.root_container, AddPostFragment.newInstance(), TAG_ADD_POST_FRAGMENT)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.M)

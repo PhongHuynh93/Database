@@ -2,10 +2,8 @@ package dhbk.android.database.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -104,9 +102,9 @@ public class ShowPostFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.action_add_post) {
-            // TODO: 6/5/16 add image from galery to database
+            // : 6/5/16 add image from galery to database
             if (mListener != null) {
-                mListener.onPostImageToRecyclerView();
+                mListener.onReplaceAddPostFrag();
                 return true;
             }
         }
@@ -122,21 +120,22 @@ public class ShowPostFragment extends Fragment {
 
     // add image to database and refresh recycler view
     public void addImageToDbAndRefreshRcv(Intent data) {
-        Uri selectedImage = data.getData();
-        String[] filePathColumn = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-        if(cursor!=null && cursor.getCount()>0 && cursor.moveToFirst()) {
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-
-            // FIXME: 6/5/16 add post to this
-//            RecyclerView backgroundRclv = (RecyclerView) getActivity().findViewById(R.id.recyclerview_show_posts);
-//            BitmapWorkerFromFileTask bitmapWorkerFromFileTask = new BitmapWorkerFromFileTask(backgroundRclv, picturePath);
-//            bitmapWorkerFromFileTask.execute(IMAGE_HEIGHT, IMAGE_WIDTH);
-
-            cursor.close();
-        }
+        // FIXME: 6/5/16 add post to this
+//        Uri selectedImage = data.getData();
+//        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//        Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+//        if(cursor!=null && cursor.getCount()>0 && cursor.moveToFirst()) {
+//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//            String picturePath = cursor.getString(columnIndex);
+//
+////            RecyclerView backgroundRclv = (RecyclerView) getActivity().findViewById(R.id.recyclerview_show_posts);
+////            BitmapWorkerFromFileTask bitmapWorkerFromFileTask = new BitmapWorkerFromFileTask(backgroundRclv, picturePath);
+////            bitmapWorkerFromFileTask.execute(IMAGE_HEIGHT, IMAGE_WIDTH);
+//
+//            cursor.close();
+//        }
     }
+
 
     private void showPostFromUser() {
         if (mHasPost == 0) {
@@ -144,8 +143,7 @@ public class ShowPostFragment extends Fragment {
             if (mListener != null) {
                 mListener.onCreateUserPostTable(mEmail);
             }
-            // change mHasPost
-            mHasPost = 1;
+
         } else {
             // query table to show post in recycler
             // TODO: 6/5/16 query showpost table
@@ -155,7 +153,11 @@ public class ShowPostFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+
         void onPostImageToRecyclerView();
+
         void onCreateUserPostTable(String email); // tạo table tên là email
+
+        void onReplaceAddPostFrag(); // replace this fragment with addpost fragment
     }
 }
