@@ -188,7 +188,6 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     }
 
     // get table Post including image and title text,
-    @Nullable
     public void queryPostTable(Context activityContext, String postTableName) {
         new GetCursorTablePost(activityContext).execute(postTableName);
     }

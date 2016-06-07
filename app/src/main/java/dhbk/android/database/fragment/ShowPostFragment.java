@@ -153,7 +153,10 @@ public class ShowPostFragment extends Fragment {
             mPostRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
             mFirst = false;
         } else {
-            mShowPostRecyclerAdapter.changeCursor(resultCursor);
+//            mShowPostRecyclerAdapter.changeCursor(resultCursor);
+//            mShowPostRecyclerAdapter.notifyDataSetChanged();
+            mShowPostRecyclerAdapter = new ShowPostRecyclerAdapter(getActivity().getApplicationContext(), resultCursor);
+            mPostRecyclerView.setAdapter(mShowPostRecyclerAdapter);
         }
     }
 

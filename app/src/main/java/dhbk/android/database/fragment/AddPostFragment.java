@@ -154,7 +154,6 @@ public class AddPostFragment extends Fragment {
                     mListener.onAddMessagePostToDB(mNamePostTable, resId, mesTitle, mesBody);
                     // come back to showpostfragment
                     mListener.onPopAddPostFragOut();
-
                     // refresh recycler view
                     mListener.onRefreshRecylerView();
                 }
