@@ -151,7 +151,7 @@ public class AddPostFragment extends Fragment {
                 String mesBody = mesBodyEdt.getText().toString();
 
                 if (mListener != null) {
-                    mListener.onAddMessagePostToDB(mNamePostTable, resId.intValue(), mesTitle, mesBody);
+                    mListener.onAddMessagePostToDB(mNamePostTable, resId, mesTitle, mesBody);
                     // come back to showpostfragment
                     mListener.onPopAddPostFragOut();
 

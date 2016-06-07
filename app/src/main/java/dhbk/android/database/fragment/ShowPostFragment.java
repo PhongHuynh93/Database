@@ -153,15 +153,13 @@ public class ShowPostFragment extends Fragment {
             mPostRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
             mFirst = false;
         } else {
-            ShowPostRecyclerAdapter adapter = (ShowPostRecyclerAdapter) mPostRecyclerView.getAdapter();
-            adapter.changeCursor(resultCursor);
+            mShowPostRecyclerAdapter.changeCursor(resultCursor);
         }
     }
 
 
     public interface OnFragmentInteractionListener {
         void onCreateUserPostTable(String email); // tạo table tên là email
-
         void onReplaceAddPostFrag(String email); // replace this fragment with addpost fragment, email is the name of user post's table
         void onQueryPostDatabase(String email);// query table email
     }

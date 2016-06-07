@@ -23,7 +23,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     // database
     private static final String DATABASE_NAME = "yaho";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 8;
 
     // table
     private static final String TABLE_USERS = "user_accounts";
@@ -148,9 +148,9 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
         final String KEY_CREATE_POST_TABLE = "CREATE TABLE " + removeSpecialChar(email) +
                 "(" +
                 KEY_POST_ID + " INTEGER PRIMARY KEY," +
-                KEY_POST_IMAGE + " INTEGER NOT NULL" +
+                KEY_POST_IMAGE + " INTEGER NOT NULL," +
                 KEY_POST_TITLE_TEXT + " TEXT NOT NULL," +
-                KEY_POST_BODY_TEXT + " TEXT NOT NULL," +
+                KEY_POST_BODY_TEXT + " TEXT NOT NULL" +
                 ")";
         try {
             SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
@@ -252,7 +252,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
                     userPost.put(KEY_POST_TITLE_TEXT, params[0].getTextTitle());
                     userPost.put(KEY_POST_BODY_TEXT, params[0].getTextBody());
 
-                    db.insertOrThrow(params[0].getNamePostable(), null, userPost);
+                    db.insertOrThrow(removeSpecialChar(params[0].getNamePostable()), null, userPost);
                     db.setTransactionSuccessful();
                 } catch (SQLiteException e) {
                     throw new SQLiteException(e.toString());
@@ -292,7 +292,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
             try {
                 SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
                 postCursor = db.query(namePostTable,
-                        new String[] {KEY_POST_IMAGE, KEY_POST_TITLE_TEXT},
+                        new String[] {KEY_POST_ID, KEY_POST_IMAGE, KEY_POST_TITLE_TEXT},
                         null, null, null, null, null);
                 return postCursor;
             } catch (SQLiteException e) {
