@@ -77,7 +77,7 @@ public class RegisterFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         // when complete register, call this to complete email and pass in login layout
-        void onRegisterFragmentInteractionAutoComplete(String name,String email,String pass);
+        void onRegisterFragmentInteractionAutoComplete(String name, String email, String pass);
         void onRegisterFragmentInteractionAddDatabase(String name, String email, String pass);
     }
 }

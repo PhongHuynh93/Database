@@ -1,12 +1,13 @@
 package dhbk.android.database.fragment;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,21 +17,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import dhbk.android.database.R;
+import dhbk.android.database.adapters.ShowPostRecyclerAdapter;
 
 public class ShowPostFragment extends Fragment {
     private static final String ARG_NAME = "name";
     private static final String ARG_EMAIL = "email";
     private static final String ARG_IMG = "image";
-    private static final int IMAGE_HEIGHT = 500; // height + width of scaled image
-    private static final int IMAGE_WIDTH = 500;
     private static final String ARG_HAS_POST = "hasPost";
 
     private String mName;
     private String mEmail;
     private int mImg;
+    private boolean mFirst = true;
 
     private OnFragmentInteractionListener mListener;
     private int mHasPost; // giá trị 0(chưa có table posts của người này trong database) hay 1(đã có table post của người này trong database)
+    private RecyclerView mPostRecyclerView;
+    private ShowPostRecyclerAdapter mShowPostRecyclerAdapter;
 
     public ShowPostFragment() {
         // Required empty public constructor
@@ -88,6 +91,7 @@ public class ShowPostFragment extends Fragment {
         setHasOptionsMenu(true);
         toolbar.setTitle(mName);
 
+        mPostRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview_show_posts);
         showPostFromUser();
     }
 
@@ -104,7 +108,7 @@ public class ShowPostFragment extends Fragment {
         if (id == R.id.action_add_post) {
             // : 6/5/16 add image from galery to database
             if (mListener != null) {
-                mListener.onReplaceAddPostFrag();
+                mListener.onReplaceAddPostFrag(mEmail);
                 return true;
             }
         }
@@ -118,25 +122,6 @@ public class ShowPostFragment extends Fragment {
         mListener = null;
     }
 
-    // add image to database and refresh recycler view
-    public void addImageToDbAndRefreshRcv(Intent data) {
-        // FIXME: 6/5/16 add post to this
-//        Uri selectedImage = data.getData();
-//        String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//        Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-//        if(cursor!=null && cursor.getCount()>0 && cursor.moveToFirst()) {
-//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//            String picturePath = cursor.getString(columnIndex);
-//
-////            RecyclerView backgroundRclv = (RecyclerView) getActivity().findViewById(R.id.recyclerview_show_posts);
-////            BitmapWorkerFromFileTask bitmapWorkerFromFileTask = new BitmapWorkerFromFileTask(backgroundRclv, picturePath);
-////            bitmapWorkerFromFileTask.execute(IMAGE_HEIGHT, IMAGE_WIDTH);
-//
-//            cursor.close();
-//        }
-    }
-
-
     private void showPostFromUser() {
         if (mHasPost == 0) {
             // create table
@@ -146,18 +131,38 @@ public class ShowPostFragment extends Fragment {
 
         } else {
             // query table to show post in recycler
-            // TODO: 6/5/16 query showpost table
-
+            // : 6/5/16 query showpost table
+            refreshRecyclerView();
         }
     }
 
+    // refresh recyler view, query to database and wait
+    public void refreshRecyclerView() {
+        // query databse
+        if (mListener != null) {
+            mListener.onQueryPostDatabase(mEmail);
+        }
+    }
+
+    // after database return the result, update recyler
+    public void updateRecyclerView(Cursor resultCursor) {
+        // first created adapter, after second, change cursor
+        if (mFirst) {
+            mShowPostRecyclerAdapter = new ShowPostRecyclerAdapter(getActivity().getApplicationContext(), resultCursor);
+            mPostRecyclerView.setAdapter(mShowPostRecyclerAdapter);
+            mPostRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+            mFirst = false;
+        } else {
+            ShowPostRecyclerAdapter adapter = (ShowPostRecyclerAdapter) mPostRecyclerView.getAdapter();
+            adapter.changeCursor(resultCursor);
+        }
+    }
+
+
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-
-        void onPostImageToRecyclerView();
-
         void onCreateUserPostTable(String email); // tạo table tên là email
 
-        void onReplaceAddPostFrag(); // replace this fragment with addpost fragment
+        void onReplaceAddPostFrag(String email); // replace this fragment with addpost fragment, email is the name of user post's table
+        void onQueryPostDatabase(String email);// query table email
     }
 }

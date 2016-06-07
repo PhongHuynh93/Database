@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,7 +30,8 @@ import dhbk.android.database.models.User;
 import dhbk.android.database.utils.Constant;
 import dhbk.android.database.utils.DatabaseUserHelper;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, ShowPostFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, ShowPostFragment.OnFragmentInteractionListener, AddPostFragment.OnFragmentInteractionListener,
+        DatabaseUserHelper.OnDatabaseInteractionListener {
     private static final String TAG_LOGIN_FRAGMENT = "login_fragment";
     private static final String TAG_SHOW_POST_FRAGMENT = "show_post_fragment";
     private static final String TAG_REGISTER_FRAGMENT = "register_fragment";
@@ -120,20 +121,39 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         databaseUserHelper.addUserToDatabase(user);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
     // post image to showpostfragment when click button add on toolbar
     @Override
-    public void onPostImageToRecyclerView() {
+    public void onAddImageToImgView() {
         if (Build.VERSION.SDK_INT >= 23) {
             checkPermissions();
         } else {
+            getImageFromGaleryFolder();
+        }
+    }
 
-            // FIXME: 6/5/16 add another fragment, wait until user click add image to wake this method up
-//            getImageFromGaleryFolder();
+    // pop addPostFragment out of backstack
+    @Override
+    public void onPopAddPostFragOut() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_ADD_POST_FRAGMENT);
+        if (fragment instanceof AddPostFragment) {
+            getSupportFragmentManager()
+                    .popBackStack();
+        }
+    }
+
+    // add a post from addPopFragment to database
+    @Override
+    public void onAddMessagePostToDB(String namePostTable, int imgId, String mesTitle, String mesBody) {
+        DatabaseUserHelper db = DatabaseUserHelper.getInstance(getApplicationContext());
+        db.makeMessageInPostTable(namePostTable, imgId, mesTitle, mesBody);
+    }
+
+    // refresh recycler by connect to database to query user post, show posts after user add a post
+    @Override
+    public void onRefreshRecylerView() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
+        if (fragment instanceof ShowPostFragment) {
+            ((ShowPostFragment) fragment).refreshRecyclerView();
         }
     }
 
@@ -146,15 +166,22 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     // replace ShowPostFragment with AddPostFragment
     @Override
-    public void onReplaceAddPostFrag() {
+    public void onReplaceAddPostFrag(String email) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
         if (fragment instanceof ShowPostFragment) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.root_container, AddPostFragment.newInstance(), TAG_ADD_POST_FRAGMENT)
+                    .replace(R.id.root_container, AddPostFragment.newInstance(email), TAG_ADD_POST_FRAGMENT)
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    // query table name email
+    @Override
+    public void onQueryPostDatabase(String email) {
+        DatabaseUserHelper db = DatabaseUserHelper.getInstance(getApplicationContext());
+        db.queryPostTable(this ,email);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -209,11 +236,20 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Fragment fragmentLogin = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
-            if (fragmentLogin instanceof ShowPostFragment) {
-                ((ShowPostFragment) fragmentLogin).addImageToDbAndRefreshRcv(data);
+            Fragment fragmentAddPost = getSupportFragmentManager().findFragmentByTag(TAG_ADD_POST_FRAGMENT);
+            if (fragmentAddPost instanceof AddPostFragment) {
+                ((AddPostFragment) fragmentAddPost).addImageToImgViet(data);
             }
         }
     }
 
+    // after database query table post, it's return a cursor
+    // we use this cursor to pass to recyclerview
+    @Override
+    public void onResultPostTable(Cursor result) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
+        if (fragment instanceof ShowPostFragment) {
+            ((ShowPostFragment)fragment).updateRecyclerView(result);
+        }
+    }
 }

@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import dhbk.android.database.R;
+import dhbk.android.database.models.Post;
 import dhbk.android.database.models.User;
 
 /**
@@ -22,7 +23,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     // database
     private static final String DATABASE_NAME = "yaho";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     // table
     private static final String TABLE_USERS = "user_accounts";
@@ -37,8 +38,9 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     // user posts Table Columns, const thứ 2 là tham số liên kết với table "account"
     private static final String KEY_POST_ID = "_id";
-    private static final String KEY_POST_IMAGE = "bitmapImage";
-    private static final String KEY_POST_TEXT = "text";
+    public static final String KEY_POST_IMAGE = "imageResId";
+    public static final String KEY_POST_TITLE_TEXT = "titlePost";
+    public static final String KEY_POST_BODY_TEXT = "bodyPost";
 
 
     // create table user accounts
@@ -146,8 +148,9 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
         final String KEY_CREATE_POST_TABLE = "CREATE TABLE " + removeSpecialChar(email) +
                 "(" +
                 KEY_POST_ID + " INTEGER PRIMARY KEY," +
-                KEY_POST_TEXT + " TEXT NOT NULL," + // post được quyền null
-                KEY_POST_IMAGE + " BLOB NOT NULL" + // image được quyền null
+                KEY_POST_IMAGE + " INTEGER NOT NULL" +
+                KEY_POST_TITLE_TEXT + " TEXT NOT NULL," +
+                KEY_POST_BODY_TEXT + " TEXT NOT NULL," +
                 ")";
         try {
             SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
@@ -172,11 +175,24 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     }
 
-    private String removeSpecialChar(String email) {
+    public void makeMessageInPostTable(String namePostTable, int imgId, String mesTitle, String mesBody) {
+        Post post = new Post(namePostTable, imgId, mesTitle, mesBody);
+        // TODO: 6/7/2016 add to post table by calling asynctask
+        new AddPostTask().execute(post);
+    }
+
+    public static String removeSpecialChar(String email) {
         email = email.replace("@", "");
         email = email.replace(".", "");
         return email;
     }
+
+    // get table Post including image and title text,
+    @Nullable
+    public void queryPostTable(Context activityContext, String postTableName) {
+        new GetCursorTablePost(activityContext).execute(postTableName);
+    }
+
 
     // add useracount to database and return status
     private static class AddUserTask extends AsyncTask<String, Void, Boolean> {
@@ -218,6 +234,85 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
         }
     }
 
-    // get useraccount depends on email
+    // add useracount to database and return status
+    private static class AddPostTask extends AsyncTask<Post, Void, Boolean> {
 
+        @Override
+        protected Boolean doInBackground(Post... params) {
+            if (params.length != 1) {
+                return false;
+            }
+            try {
+                SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
+                try {
+                    db.beginTransaction();
+
+                    ContentValues userPost = new ContentValues();
+                    userPost.put(KEY_POST_IMAGE, params[0].getMesId());
+                    userPost.put(KEY_POST_TITLE_TEXT, params[0].getTextTitle());
+                    userPost.put(KEY_POST_BODY_TEXT, params[0].getTextBody());
+
+                    db.insertOrThrow(params[0].getNamePostable(), null, userPost);
+                    db.setTransactionSuccessful();
+                } catch (SQLiteException e) {
+                    throw new SQLiteException(e.toString());
+                } finally {
+                    db.endTransaction();
+                }
+            } catch (SQLiteException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean error) {
+            super.onPostExecute(error);
+            if (!error) {
+                Log.d(TAG, "Error when add database");
+            }
+        }
+    }
+
+    private static class GetCursorTablePost extends AsyncTask<String, Void, Cursor> {
+        private final Context mActivityContext;
+        private OnDatabaseInteractionListener mOnDatabaseInteractionListener;
+        private GetCursorTablePost(Context activityContext) {
+            mActivityContext = activityContext;
+        }
+        @Override
+        protected Cursor doInBackground(String... params) {
+            if (params.length != 1) {
+                return null;
+            }
+
+            String namePostTable = params[0];
+            namePostTable = removeSpecialChar(namePostTable);
+            Cursor postCursor;
+            try {
+                SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
+                postCursor = db.query(namePostTable,
+                        new String[] {KEY_POST_IMAGE, KEY_POST_TITLE_TEXT},
+                        null, null, null, null, null);
+                return postCursor;
+            } catch (SQLiteException e) {
+                Log.e(TAG, "createPostTable: " + e.toString());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            super.onPostExecute(cursor);
+            if (mActivityContext instanceof OnDatabaseInteractionListener) {
+                mOnDatabaseInteractionListener = (OnDatabaseInteractionListener)mActivityContext;
+                mOnDatabaseInteractionListener.onResultPostTable(cursor);
+            }
+        }
+    }
+
+    // help to interact with database
+    public interface OnDatabaseInteractionListener {
+        void onResultPostTable(Cursor result); // this method'll return cursor after query post table.
+    }
 }
