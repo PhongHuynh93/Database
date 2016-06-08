@@ -28,12 +28,9 @@ public class ShowPostFragment extends Fragment {
     private String mName;
     private String mEmail;
     private int mImg;
-    private boolean mFirst = true;
 
     private OnFragmentInteractionListener mListener;
     private int mHasPost; // giá trị 0(chưa có table posts của người này trong database) hay 1(đã có table post của người này trong database)
-    private RecyclerView mPostRecyclerView;
-    private ShowPostRecyclerAdapter mShowPostRecyclerAdapter;
 
     public ShowPostFragment() {
         // Required empty public constructor
@@ -91,7 +88,6 @@ public class ShowPostFragment extends Fragment {
         setHasOptionsMenu(true);
         toolbar.setTitle(mName);
 
-        mPostRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview_show_posts);
         showPostFromUser();
     }
 
@@ -146,24 +142,20 @@ public class ShowPostFragment extends Fragment {
 
     // after database return the result, update recyler
     public void updateRecyclerView(Cursor resultCursor) {
-        // first created adapter, after second, change cursor
-        if (mFirst) {
-            mShowPostRecyclerAdapter = new ShowPostRecyclerAdapter(getActivity().getApplicationContext(), resultCursor);
-            mPostRecyclerView.setAdapter(mShowPostRecyclerAdapter);
-            mPostRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-            mFirst = false;
-        } else {
-//            mShowPostRecyclerAdapter.changeCursor(resultCursor);
-//            mShowPostRecyclerAdapter.notifyDataSetChanged();
-            mShowPostRecyclerAdapter = new ShowPostRecyclerAdapter(getActivity().getApplicationContext(), resultCursor);
-            mPostRecyclerView.setAdapter(mShowPostRecyclerAdapter);
-        }
+        // chú ý la phải tạo lại recyclerview lý đo là viewroot cũ đã xóa cho nên recycler cũng bị xóa luôn.
+        RecyclerView mPostRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview_show_posts);
+        ShowPostRecyclerAdapter mShowPostRecyclerAdapter = new ShowPostRecyclerAdapter(getActivity().getApplicationContext(), resultCursor);
+        mPostRecyclerView.setAdapter(mShowPostRecyclerAdapter);
+        mPostRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+
     }
 
 
     public interface OnFragmentInteractionListener {
         void onCreateUserPostTable(String email); // tạo table tên là email
+
         void onReplaceAddPostFrag(String email); // replace this fragment with addpost fragment, email is the name of user post's table
+
         void onQueryPostDatabase(String email);// query table email
     }
 }
