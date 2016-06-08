@@ -49,7 +49,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
             KEY_USER_ID + " INTEGER PRIMARY KEY," +
             KEY_USER_NAME + " TEXT NOT NULL," +
             KEY_USER_EMAIL + " TEXT NOT NULL UNIQUE," +
-            KEY_USER_PASS + " TEXT NOT NULL," +
+              KEY_USER_PASS + " TEXT NOT NULL," +
             KEY_USER_PROFILE_PICTURE_URL + " INT DEFAULT " + R.mipmap.ic_launcher + "," +
             KEY_USER_HAS_POST_TABLE + " INTEGER DEFAULT 0" +
             ")"; // mặc định mỗi user chưa có 1 table của riêng họ -> gán 0 là mặc định

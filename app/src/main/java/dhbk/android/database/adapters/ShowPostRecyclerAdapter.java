@@ -55,6 +55,7 @@ public class ShowPostRecyclerAdapter extends
         viewHolder.editImgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "onBindViewHolder: position " + position);
                 String table_name = mListener.onGetTableName();
                 mListener.onChangeEditPostFragment(table_name, myListItem.getTextTitle(), myListItem.getTextBody(), myListItem.getMesId(), position);
             }
