@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import dhbk.android.database.R;
 import dhbk.android.database.adapters.ShowPostRecyclerAdapter;
+import dhbk.android.database.utils.SpacesItemDecoration;
 
 public class ShowPostFragment extends Fragment {
     private static final String ARG_NAME = "name";
@@ -86,7 +87,7 @@ public class ShowPostFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         setHasOptionsMenu(true);
-        toolbar.setTitle(mName);
+        toolbar.setTitle("Timeline");
 
         showPostFromUser();
     }
@@ -143,13 +144,20 @@ public class ShowPostFragment extends Fragment {
     // after database return the result, update recyler
     public void updateRecyclerView(Cursor resultCursor) {
         // chú ý la phải tạo lại recyclerview lý đo là viewroot cũ đã xóa cho nên recycler cũng bị xóa luôn.
-        RecyclerView mPostRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview_show_posts);
-        ShowPostRecyclerAdapter mShowPostRecyclerAdapter = new ShowPostRecyclerAdapter(getActivity().getApplicationContext(), resultCursor);
-        mPostRecyclerView.setAdapter(mShowPostRecyclerAdapter);
-        mPostRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        RecyclerView postRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview_show_posts);
+        ShowPostRecyclerAdapter mShowPostRecyclerAdapter = new ShowPostRecyclerAdapter(getActivity(), resultCursor); // pass activity context
+        postRecyclerView.setAdapter(mShowPostRecyclerAdapter);
+        postRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
 
+        // space between row
+        RecyclerView.ItemDecoration spaceDecoration = new
+                SpacesItemDecoration(20);
+        postRecyclerView.addItemDecoration(spaceDecoration);
     }
 
+    public String getEmail() {
+        return mEmail;
+    }
 
     public interface OnFragmentInteractionListener {
         void onCreateUserPostTable(String email); // tạo table tên là email

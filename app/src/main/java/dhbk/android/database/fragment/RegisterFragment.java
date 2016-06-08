@@ -53,7 +53,6 @@ public class RegisterFragment extends Fragment {
         mListener = null;
     }
 
-    // TODO: 6/4/16 check error when register etc empty field
     // giả sử đã điền đầy đủ 4 thông tin, cất name, email, pass word vào database
     private void setUpView() {
         Button registerButton = (Button) getActivity().findViewById(R.id.btn_register);

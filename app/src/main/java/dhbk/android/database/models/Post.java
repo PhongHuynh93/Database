@@ -21,10 +21,19 @@ public class Post {
         this.textBody = textBody;
     }
 
-    public Post(int mesId, String textTitle) {
+    public Post(String namePostable, String textTitle, String textBody) {
+        this.namePostable = namePostable;
+        this.textTitle = textTitle;
+        this.textBody = textBody;
+    }
+
+    public Post(int mesId, String textTitle, String textBody) {
         this.mesId = mesId;
         this.textTitle = textTitle;
+        this.textBody = textBody;
     }
+
+
 
     public int getMesId() {
         return mesId;
@@ -44,10 +53,11 @@ public class Post {
 
     @Nullable
     public static Post fromCursor(Cursor cursor) {
-        if(cursor!=null && cursor.getCount()>0 && cursor.moveToFirst()) {
+        if(cursor!=null) {
             int resImg = cursor.getInt(cursor.getColumnIndex(DatabaseUserHelper.KEY_POST_IMAGE));
             String titleMes = cursor.getString(cursor.getColumnIndex(DatabaseUserHelper.KEY_POST_TITLE_TEXT));
-            return new Post(resImg, titleMes);
+            String bodyMes = cursor.getString(cursor.getColumnIndex(DatabaseUserHelper.KEY_POST_BODY_TEXT));
+            return new Post(resImg, titleMes, bodyMes);
         }
         return null;
     }

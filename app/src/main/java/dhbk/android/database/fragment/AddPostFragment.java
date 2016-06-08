@@ -43,6 +43,11 @@ public class AddPostFragment extends Fragment {
                     R.drawable.add_post_image
 
             };
+//    public static final int[] IMAGE_PAGE_VIEWER = {
+//            R.drawable.bill_gate,
+//            R.drawable.mi_band,
+//            R.drawable.motorola
+//    };
     private String mNamePostTable;
 
     public AddPostFragment() {
@@ -123,7 +128,7 @@ public class AddPostFragment extends Fragment {
 
     private void setupView() {
         ViewPager chooseImgViewPager = (ViewPager) getActivity().findViewById(R.id.viewpager_add_image_post);
-        ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(getChildFragmentManager(), IMAGE_PAGE_VIEWER.length);
+        final ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(getChildFragmentManager(), IMAGE_PAGE_VIEWER.length);
         chooseImgViewPager.setAdapter(imagePagerAdapter);
 
         Button backButton = (Button) getActivity().findViewById(R.id.button_back);
@@ -141,17 +146,21 @@ public class AddPostFragment extends Fragment {
             public void onClick(View v) {
                 // add 3 field in database
                 ViewPager chooseImgViewPager = (ViewPager) getActivity().findViewById(R.id.viewpager_add_image_post);
-                ImageView img = (ImageView) chooseImgViewPager.findViewById(R.id.imgView_view_pager);
+                Integer resId = AddPostFragment.IMAGE_PAGE_VIEWER[0];
+                int imageid =  AddPostFragment.IMAGE_PAGE_VIEWER[chooseImgViewPager.getCurrentItem()];
+//                PagerAdapter pagerAdapter = chooseImgViewPager.getAdapter();
+//                if (pagerAdapter instanceof ImagePagerAdapter) {
+//                    resId = AddPostFragment.IMAGE_PAGE_VIEWER[((ImagePagerAdapter) pagerAdapter).getPosition()];
+//                }
 
                 EditText mesTitleEdt = (EditText) getActivity().findViewById(R.id.message_title);
                 EditText mesBodyEdt = (EditText) getActivity().findViewById(R.id.message_body);
 
-                Integer resId = (Integer) img.getTag(); // lấy file id của image đang hiện và lưu vào database
                 String mesTitle = mesTitleEdt.getText().toString();
                 String mesBody = mesBodyEdt.getText().toString();
 
                 if (mListener != null) {
-                    mListener.onAddMessagePostToDB(mNamePostTable, resId, mesTitle, mesBody);
+                    mListener.onAddMessagePostToDB(mNamePostTable, imageid, mesTitle, mesBody);
                     // come back to showpostfragment
                     mListener.onPopAddPostFragOut();
                     // refresh recycler view
@@ -170,6 +179,7 @@ public class AddPostFragment extends Fragment {
         }
     }
 
+    // interface to talk to MainActivity
     public interface OnFragmentInteractionListener {
         void onAddImageToImgView(); // go to galery, get image and add iamge
 
@@ -178,5 +188,11 @@ public class AddPostFragment extends Fragment {
         void onAddMessagePostToDB(String namePostTable, int imgId, String mesTitle, String mesBody); // add post to database
 
         void onRefreshRecylerView(); // refresh lại list các bài post sau khi add
+
+    }
+
+    // interface to talk to child fragment
+    public interface OnFragmentChildInteractionListener {
+        int onReturnResIdImageView();
     }
 }

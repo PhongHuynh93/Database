@@ -23,7 +23,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     // database
     private static final String DATABASE_NAME = "yaho";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 12;
 
     // table
     private static final String TABLE_USERS = "user_accounts";
@@ -44,7 +44,6 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
 
     // create table user accounts
-    // TODO: 6/5/16 change string to string builder
     private static final String KEY_CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USERS +
             "(" +
             KEY_USER_ID + " INTEGER PRIMARY KEY," +
@@ -177,7 +176,6 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
 
     public void makeMessageInPostTable(String namePostTable, int imgId, String mesTitle, String mesBody) {
         Post post = new Post(namePostTable, imgId, mesTitle, mesBody);
-        // TODO: 6/7/2016 add to post table by calling asynctask
         new AddPostTask().execute(post);
     }
 
@@ -190,6 +188,12 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
     // get table Post including image and title text,
     public void queryPostTable(Context activityContext, String postTableName) {
         new GetCursorTablePost(activityContext).execute(postTableName);
+    }
+
+
+    public void updateMessageInPostTable(String namePostTable, String mesTitle, String mesBody, int position) {
+        Post post = new Post(namePostTable, mesTitle, mesBody);
+        new UpdatePostTask(position + 1).execute(post);
     }
 
 
@@ -273,6 +277,49 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
         }
     }
 
+    // add useracount to database and return status
+    private static class UpdatePostTask extends AsyncTask<Post, Void, Boolean> {
+        private int mPosition;
+        private UpdatePostTask(int position) {
+            this.mPosition = position;
+        }
+
+        @Override
+        protected Boolean doInBackground(Post... params) {
+            if (params.length != 1) {
+                return false;
+            }
+            try {
+                SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
+                try {
+                    db.beginTransaction();
+
+                    ContentValues userPost = new ContentValues();
+                    userPost.put(KEY_POST_TITLE_TEXT, params[0].getTextTitle());
+                    userPost.put(KEY_POST_BODY_TEXT, params[0].getTextBody());
+
+                    db.update(removeSpecialChar(params[0].getNamePostable()), userPost, KEY_POST_ID + " = ?",new String[] {Integer.toString(mPosition)});
+                    db.setTransactionSuccessful();
+                } catch (SQLiteException e) {
+                    throw new SQLiteException(e.toString());
+                } finally {
+                    db.endTransaction();
+                }
+            } catch (SQLiteException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean error) {
+            super.onPostExecute(error);
+            if (!error) {
+                Log.d(TAG, "Error when add database");
+            }
+        }
+    }
+
     private static class GetCursorTablePost extends AsyncTask<String, Void, Cursor> {
         private final Context mActivityContext;
         private OnDatabaseInteractionListener mOnDatabaseInteractionListener;
@@ -291,7 +338,7 @@ public class DatabaseUserHelper extends SQLiteOpenHelper {
             try {
                 SQLiteDatabase db = DatabaseUserHelper.getInstance(mContext).getWritableDatabase();
                 postCursor = db.query(namePostTable,
-                        new String[] {KEY_POST_ID, KEY_POST_IMAGE, KEY_POST_TITLE_TEXT},
+                        new String[] {KEY_POST_ID, KEY_POST_IMAGE, KEY_POST_TITLE_TEXT, KEY_POST_BODY_TEXT},
                         null, null, null, null, null);
                 return postCursor;
             } catch (SQLiteException e) {

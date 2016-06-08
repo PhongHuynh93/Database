@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import dhbk.android.database.R;
 
-public class ImageDetailFragment extends Fragment {
+public class ImageDetailFragment extends Fragment{
     private static final String IMAGE_DATA_EXTRA = "resId";
     private static final String TAG = ImageDetailFragment.class.getName();
     private int mImageNum;
@@ -55,5 +55,9 @@ public class ImageDetailFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    public int getImageNum() {
+        return mImageNum;
     }
 }

@@ -49,7 +49,6 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    // TODO: 6/4/16 cache bitmap
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -124,7 +123,6 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 6/4/16 check password and email by access database before alllow to enter to login.
                 if (mListener != null) {
                     EditText emailEdt = (EditText) getActivity().findViewById(R.id.edt_email);
                     setEmail(emailEdt.getText().toString());

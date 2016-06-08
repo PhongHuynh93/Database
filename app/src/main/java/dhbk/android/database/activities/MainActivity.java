@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,7 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 import dhbk.android.database.R;
+import dhbk.android.database.adapters.ShowPostRecyclerAdapter;
 import dhbk.android.database.fragment.AddPostFragment;
+import dhbk.android.database.fragment.DetailPostFragment;
+import dhbk.android.database.fragment.EditPostFragment;
 import dhbk.android.database.fragment.LoginFragment;
 import dhbk.android.database.fragment.RegisterFragment;
 import dhbk.android.database.fragment.ShowPostFragment;
@@ -31,12 +35,15 @@ import dhbk.android.database.utils.Constant;
 import dhbk.android.database.utils.DatabaseUserHelper;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener, ShowPostFragment.OnFragmentInteractionListener, AddPostFragment.OnFragmentInteractionListener,
-        DatabaseUserHelper.OnDatabaseInteractionListener {
+        DatabaseUserHelper.OnDatabaseInteractionListener, ShowPostRecyclerAdapter.OnFragmentInteractionListener, DetailPostFragment.OnFragmentInteractionListener,
+EditPostFragment.OnFragmentInteractionListener{
     private static final String TAG_LOGIN_FRAGMENT = "login_fragment";
     private static final String TAG_SHOW_POST_FRAGMENT = "show_post_fragment";
     private static final String TAG_REGISTER_FRAGMENT = "register_fragment";
     private static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 100;
     private static final String TAG_ADD_POST_FRAGMENT = "add_post_fragment";
+    private static final String TAG_DETAIL_POST_FRAGMENT = "detail_post_fragment";
+    private static final String TAG_EDIT_POST_FRAGMENT = "edit_post_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     // replace LoginFragment with ShowPostFragment
     @Override
     public void onReplaceShowPostFragmentInteraction(@NonNull String emailText, @NonNull String passText) {
-        // TODO: 6/4/16 check infor in edt is the same as database
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_FRAGMENT);
         if (fragment instanceof LoginFragment) {
             User userAccount = ((LoginFragment) fragment).checkUserAccount(emailText, passText);
@@ -225,6 +231,42 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         }
     }
 
+    // replace showpost fragment with detail post fragment
+    @Override
+    public void onChangeDetailPostFragment(String title, String body, int resId) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
+        if (fragment instanceof ShowPostFragment) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.root_container, DetailPostFragment.newInstance(title, body, resId), TAG_DETAIL_POST_FRAGMENT)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
+    // change from showpostfragment to editpostfragment
+    @Override
+    public void onChangeEditPostFragment(String getNamePostable, String getTextTitle, String getTextBody, int getMesId, int position) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
+        if (fragment instanceof ShowPostFragment) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.root_container, EditPostFragment.newInstance(getNamePostable, getTextTitle, getTextBody, getMesId, position), TAG_EDIT_POST_FRAGMENT)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
+    // get table name from showpost fragment
+    @Override
+    public String onGetTableName() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_SHOW_POST_FRAGMENT);
+        if (fragment instanceof ShowPostFragment) {
+            return ((ShowPostFragment) fragment).getEmail();
+        }
+        return null;
+    }
+
     // get image from galery by sending intent
     private void getImageFromGaleryFolder() {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -251,5 +293,27 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         if (fragment instanceof ShowPostFragment) {
             ((ShowPostFragment)fragment).updateRecyclerView(result);
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    // pop edit fragment out
+    @Override
+    public void onPopEditPostFragOut() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_EDIT_POST_FRAGMENT);
+        if (fragment instanceof EditPostFragment) {
+            getSupportFragmentManager()
+                    .popBackStack();
+        }
+    }
+
+    // update to database
+    @Override
+    public void onUpdateMessagePostToDB(@NonNull String namePostTable,@NonNull String mesTitle,@NonNull String mesBody,@NonNull int position) {
+        DatabaseUserHelper db = DatabaseUserHelper.getInstance(getApplicationContext());
+        db.updateMessageInPostTable(namePostTable, mesTitle, mesBody, position);
     }
 }
