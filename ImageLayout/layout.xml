@@ -1,0 +1,321 @@
+###########################################################################
+custome button
+<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_add"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_button"
+                android:text="@string/add_button"/>
+
+            <Button
+                android:id="@+id/button_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_left_button_back"
+                android:background="@drawable/bg_button"
+                android:text="@string/back_button"/>
+        </LinearLayout>
+
+<?xml version="1.0" encoding="utf-8"?>
+<!--make corner button-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="3dip"/>
+            <stroke android:width="1dip" android:color="#5e7974"/>
+            <gradient android:angle="-90" android:endColor="#689a92" android:startColor="#345953"/>
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="3dip"/>
+            <stroke android:width="1dip" android:color="#5e7974"/>
+            <solid android:color="#58857e"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="3dip"/>
+            <stroke android:width="1dip" android:color="#5e7974"/>
+            <gradient android:angle="-90" android:endColor="#58857e" android:startColor="#8dbab3"/>
+        </shape>
+    </item>
+</selector>
+
+###########################################################################
+custome edittext, not have round corner bacause we can have it by implement cardview
+<?xml version="1.0" encoding="utf-8"?>
+<!--thiet kế edittext cho 2 trạng thái chưa focus và focus-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/edt_custome_focused" android:state_focused="true"/>
+    <item android:drawable="@drawable/edt_custome_normal"/>
+</selector>
+
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+    <solid android:color="#00000000" />
+    <stroke android:width="1dip" android:color="#ffffff" />
+</shape>
+
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+    <solid android:color="#00000000" />
+    <stroke android:width="2dip" android:color="@color/blue" />
+</shape>
+
+###########################################################################
+custome login layout
+làm cho vung giữa co alpha để đặt edittext vào đấy
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 1 change login layout-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/teal">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/image_login_bg"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/bgContentDescription"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/login_title_margin_top"
+        android:text="@string/login_title"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/login_title_text_size"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="#99000000"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/login_bottom_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/login_top_margin">
+
+        <!-- 1 cách đổi màu cho text hint, text-->
+        <EditText
+            android:id="@+id/edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/login_email_hint"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:textColor="@color/grey_white"
+            android:textColorHint="@color/grey_white"/>
+
+        <EditText
+            android:id="@+id/edt_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/login_password_hint"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColor="@color/grey_white"
+            android:textColorHint="@color/grey_white"/>
+
+        <!-- 2 làm cho button 4 góc tròn-->
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/login_button_margin_top"
+            app:cardCornerRadius="@dimen/activity_vertical_margin"
+            app:cardElevation="@dimen/activity_vertical_margin">
+
+            <Button
+                android:id="@+id/btn_log_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_white"
+                android:text="@string/login_signup_button"/>
+        </android.support.v7.widget.CardView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/login_forgot_password_top"
+            android:text="@string/login_forgot_password_tv"
+            android:textColor="@color/grey_white"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_gravity="center|bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/login_register_button"
+        app:cardCornerRadius="@dimen/activity_vertical_margin"
+        app:cardElevation="@dimen/activity_vertical_margin">
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_white"
+            android:text="@string/login_register_button"/>
+    </android.support.v7.widget.CardView>
+</FrameLayout>
+
+###########################################################################
+custome register layout
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@color/grey_light">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/register_title_margin_top"
+        android:text="@string/register_title_big"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/login_title_text_size"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/icon_beach"
+        android:src="@drawable/ic_beach_access_black_48dp"/>
+
+    <!--bold text-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_title"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:clickable="false"/>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:layout_marginTop="@dimen/register_vertical_margin_title">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:background="@drawable/edt_custome_register"
+            android:hint="@string/register_name"
+            android:inputType="textPersonName"
+            android:paddingLeft="@dimen/edittext_padding"
+            android:textColorHighlight="@color/grey_white"
+            android:id="@+id/edt_name"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:layout_marginTop="@dimen/register_vertical_margin">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:background="@drawable/edt_custome_register"
+            android:hint="@string/register_email"
+
+            android:inputType="textEmailAddress"
+            android:paddingLeft="@dimen/edittext_padding"
+
+            android:textColorHighlight="@color/grey_white"
+            android:id="@+id/edt_email"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:layout_marginTop="@dimen/register_vertical_margin">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:background="@drawable/edt_custome_register"
+            android:hint="@string/register_pass"
+
+            android:inputType="textPassword"
+            android:paddingLeft="@dimen/edittext_padding"
+
+            android:textColorHighlight="@color/grey_white"
+            android:id="@+id/edt_password"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:layout_marginTop="@dimen/register_vertical_margin">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:background="@drawable/edt_custome_register"
+            android:hint="@string/register_pass_again"
+
+            android:inputType="textPassword"
+            android:paddingLeft="@dimen/edittext_padding"
+
+            android:textColorHighlight="@color/grey_white"
+            android:id="@+id/edt_check_password"/>
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/register_horizontal_margin"
+        android:layout_marginLeft="@dimen/register_horizontal_margin"
+        android:layout_marginRight="@dimen/register_horizontal_margin"
+        android:background="@color/grey_dark"
+        android:textColor="@android:color/white"
+        android:text="@string/register_button"
+        android:id="@+id/btn_register"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_msg_agree"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_msg_agree_2"/>
+</LinearLayout>
+
+###########################################################################
